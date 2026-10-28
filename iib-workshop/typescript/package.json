@@ -1,0 +1,26 @@
+{
+  "name": "iib-workshop-typescript",
+  "version": "3.0.0",
+  "description": "AG Studio x Information is Beautiful workshop starter - TypeScript",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "data:edit-wars:fetch": "node scripts/fetch-edit-wars.mjs",
+    "data:edit-wars": "node scripts/build-data-source.mjs",
+    "data:longevity": "node scripts/build-longevity-source.mjs"
+  },
+  "dependencies": {
+    "ag-charts-enterprise": "14.2.0-beta.20261025",
+    "ag-studio": "3.0.0-beta.20261024.2300",
+    "qrcode-generator": "^1.4.4"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.6",
+    "typescript": "~5.8.3",
+    "vite": "~5.4.19"
+  }
+}

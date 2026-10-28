@@ -1,0 +1,605 @@
+/*
+ * Every rule is scoped under `.iib-workshop` so the app neither touches nor depends on host styles.
+ * The --iib-* values are only the first paint; the demo overwrites them from the active preset.
+ */
+.iib-workshop {
+    --iib-sidebar: #16181d;
+    --iib-canvas: #1a1c22;
+    --iib-widget: #24272f;
+    --iib-raised: #2e323c;
+    --iib-text: #f2f0eb;
+    --iib-subtle: #8b8f9a;
+    --iib-border: #343842;
+    --iib-accent: #ff6b5b;
+    --iib-font: 'Quicksand', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --iib-brand-font: var(--iib-font);
+
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+    background: var(--iib-canvas);
+    color: var(--iib-text);
+    color-scheme: dark;
+    font-family: var(--iib-font);
+    font-size: 13px;
+    /*
+     * Quicksand is a light geometric face and its 400 washes out, most of all on the pale
+     * ground, so the shell runs a step heavier throughout: 500 for body, 600 for emphasis.
+     */
+    font-weight: 500;
+    -webkit-font-smoothing: antialiased;
+}
+
+.iib-workshop,
+.iib-workshop * {
+    box-sizing: border-box;
+}
+
+/* Sidebar ---------------------------------------------------------------- */
+
+.iib-workshop .sidebar {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 232px;
+    gap: 4px;
+    padding: 18px 12px 12px;
+    background: var(--iib-sidebar);
+    border-right: 1px solid var(--iib-border);
+}
+
+.iib-workshop .brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 0 8px 18px;
+}
+
+.iib-workshop .brand-flower {
+    flex: 0 0 auto;
+    display: block;
+}
+
+.iib-workshop .brand-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    gap: 3px;
+    line-height: 1.2;
+}
+
+/* The wordmark ships in two ink colours; show whichever suits the mode. */
+.iib-workshop .brand-wordmark {
+    display: block;
+    width: 124px;
+    height: auto;
+}
+
+.iib-workshop .brand-wordmark--on-light {
+    display: none;
+}
+
+.iib-workshop[data-ag-theme-mode='light'] .brand-wordmark--on-dark {
+    display: none;
+}
+
+.iib-workshop[data-ag-theme-mode='light'] .brand-wordmark--on-light {
+    display: block;
+}
+
+.iib-workshop .brand-sub {
+    font-family: var(--iib-brand-font);
+    color: var(--iib-subtle);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.iib-workshop .heading {
+    padding: 0 8px 6px;
+    color: var(--iib-subtle);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+}
+
+.iib-workshop .reports {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.iib-workshop .report-item,
+.iib-workshop .new-report {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 8px 9px;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    background: none;
+    color: var(--iib-subtle);
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.iib-workshop .report-item:hover,
+.iib-workshop .new-report:hover {
+    background: var(--iib-raised);
+    color: var(--iib-text);
+}
+
+.iib-workshop .report-item.active {
+    background: var(--iib-widget);
+    border-color: var(--iib-border);
+    color: var(--iib-text);
+    font-weight: 600;
+}
+
+.iib-workshop .report-item.active .report-icon {
+    color: var(--iib-accent);
+}
+
+.iib-workshop .report-icon {
+    flex: 0 0 auto;
+    color: currentColor;
+}
+
+.iib-workshop .report-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.iib-workshop .report-item {
+    position: relative;
+}
+
+/* Laid over the label, from the icon's gap to the row's edge, so renaming does not resize the row. */
+.iib-workshop .report-rename {
+    position: absolute;
+    inset: 4px 5px 4px 30px;
+    min-width: 0;
+    padding: 0 5px;
+    border: 1px solid var(--iib-accent);
+    border-radius: 5px;
+    outline: none;
+    background: var(--iib-canvas);
+    color: var(--iib-text);
+    font: inherit;
+}
+
+.iib-workshop .new-report {
+    margin-top: 8px;
+    border: 1px dashed var(--iib-border);
+}
+
+/* Product credit --------------------------------------------------------- */
+
+.iib-workshop .powered-by {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    margin-top: auto;
+    /*
+     * No side padding, so the block sits on the sidebar's own rails: the label lines up
+     * with the REPORTS heading, and the logo with the brand mark and the nav icons.
+     */
+    padding: 14px 0 2px;
+    border-top: 1px solid var(--iib-border);
+}
+
+.iib-workshop .powered-by-label {
+    color: var(--iib-subtle);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.iib-workshop .powered-by-logo {
+    display: block;
+    height: 25px;
+    width: auto;
+    /* The wordmark's transparent margin at this height, measured off rendered pixels (the viewBox overstates it). */
+    margin-left: -5.8px;
+}
+
+/* Canvas ----------------------------------------------------------------- */
+
+.iib-workshop .canvas {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.iib-workshop .topbar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 20px;
+    border-bottom: 1px solid var(--iib-border);
+}
+
+/*
+ * Title and note stack, each on one line. The note is sized to fit beside the controls at
+ * laptop widths; on a narrower screen it ends in an ellipsis, and its title attribute
+ * carries the full text.
+ */
+.iib-workshop .topbar-brand {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.iib-workshop .topbar-title {
+    font-size: 15px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.iib-workshop .topbar-note {
+    overflow: hidden;
+    color: var(--iib-subtle);
+    font-size: 12px;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.iib-workshop .topbar-actions {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 6px;
+    margin-left: auto;
+}
+
+/* Every topbar control shares one shape so they read as one set. */
+.iib-workshop .theme-select,
+.iib-workshop .topbar-button,
+.iib-workshop .topbar-icon,
+.iib-workshop .mode-switch {
+    height: 28px;
+    border: 1px solid var(--iib-border);
+    border-radius: 6px;
+    background-color: var(--iib-widget);
+    color: var(--iib-text);
+    font: inherit;
+    font-size: 12px;
+}
+
+.iib-workshop .theme-select:hover,
+.iib-workshop .topbar-button:hover,
+.iib-workshop .topbar-icon:hover {
+    border-color: var(--iib-subtle);
+}
+
+.iib-workshop .topbar-button {
+    padding: 0 11px;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.iib-workshop .mode-switch {
+    display: flex;
+    gap: 2px;
+    padding: 2px;
+}
+
+.iib-workshop .mode-option {
+    padding: 0 12px;
+    border: 0;
+    border-radius: 4px;
+    background: none;
+    color: var(--iib-subtle);
+    font: inherit;
+    cursor: pointer;
+}
+
+.iib-workshop .mode-option:hover {
+    color: var(--iib-text);
+}
+
+.iib-workshop .mode-option.active {
+    background: var(--iib-raised);
+    color: var(--iib-text);
+    font-weight: 600;
+}
+
+.iib-workshop .studio-outer {
+    flex: 1 1 auto;
+    min-height: 0;
+}
+
+@media (max-width: 720px) {
+    .iib-workshop {
+        flex-direction: column;
+        overflow: auto;
+    }
+
+    .iib-workshop .sidebar {
+        flex: 0 0 auto;
+        border-right: none;
+        border-bottom: 1px solid var(--iib-border);
+    }
+
+    .iib-workshop .powered-by {
+        margin-top: 12px;
+    }
+}
+
+/* Config dialog ---------------------------------------------------------- */
+
+.iib-workshop .config-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    display: grid;
+    padding: 24px;
+    background: #000000b8;
+    place-items: center;
+}
+
+/*
+ * An author `display` beats the UA stylesheet's `[hidden] { display: none }`, so without
+ * this the overlay stays up as a full-screen dimming layer that swallows every click.
+ */
+.iib-workshop .config-overlay[hidden] {
+    display: none;
+}
+
+.iib-workshop .config-dialog {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: min(760px, 100%);
+    max-height: min(680px, 100%);
+    padding: 18px;
+    border: 1px solid var(--iib-border);
+    border-radius: 12px;
+    background: var(--iib-widget);
+    box-shadow: 0 24px 60px #000000a6;
+}
+
+.iib-workshop .config-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.iib-workshop .config-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.iib-workshop .config-close {
+    margin-left: auto;
+    padding: 0 6px;
+    border: 0;
+    background: none;
+    color: var(--iib-subtle);
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.iib-workshop .config-close:hover {
+    color: var(--iib-text);
+}
+
+.iib-workshop .config-hint {
+    margin: 0;
+    color: var(--iib-subtle);
+    font-size: 12px;
+}
+
+.iib-workshop .config-text {
+    flex: 1 1 auto;
+    min-height: 260px;
+    padding: 10px;
+    border: 1px solid var(--iib-border);
+    border-radius: 8px;
+    background: var(--iib-canvas);
+    color: var(--iib-text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.iib-workshop .config-status {
+    min-height: 16px;
+    color: var(--iib-subtle);
+    font-size: 12px;
+}
+
+.iib-workshop .config-status[data-tone='ok'] {
+    color: #7fb069;
+}
+
+.iib-workshop .config-status[data-tone='error'] {
+    color: var(--iib-accent);
+}
+
+.iib-workshop .config-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+.iib-workshop .config-button {
+    padding: 7px 14px;
+    border: 1px solid var(--iib-border);
+    border-radius: 7px;
+    background: none;
+    color: var(--iib-text);
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.iib-workshop .config-button:hover {
+    background: var(--iib-raised);
+}
+
+.iib-workshop .config-button-primary {
+    border-color: var(--iib-accent);
+    background: var(--iib-accent);
+    color: var(--iib-widget);
+    font-weight: 600;
+}
+
+.iib-workshop .config-button-primary:hover {
+    /* Restated because .config-button:hover outranks .config-button-primary. */
+    background: var(--iib-accent);
+    filter: brightness(1.1);
+}
+
+/* Theme picker, share actions and the modal they open. */
+
+.iib-workshop .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+
+.iib-workshop .theme-picker {
+    display: flex;
+    align-items: center;
+}
+
+.iib-workshop .theme-select {
+    padding: 0 26px 0 9px;
+    cursor: pointer;
+    appearance: none;
+    background-image:
+        linear-gradient(45deg, transparent 50%, currentColor 50%),
+        linear-gradient(135deg, currentColor 50%, transparent 50%);
+    background-position:
+        right 12px center,
+        right 8px center;
+    background-size:
+        4px 4px,
+        4px 4px;
+    background-repeat: no-repeat;
+}
+
+.iib-workshop .topbar-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    padding: 0;
+    cursor: pointer;
+}
+
+.iib-workshop .topbar-divider {
+    width: 1px;
+    height: 18px;
+    background: var(--iib-border);
+}
+
+/* Modal */
+
+.iib-workshop .share-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    background: rgb(0 0 0 / 55%);
+}
+
+.iib-workshop .share-overlay[hidden] {
+    display: none;
+}
+
+.iib-workshop .share-dialog {
+    width: min(420px, 100%);
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+    padding: 18px 20px 20px;
+    border: 1px solid var(--iib-border);
+    border-radius: 12px;
+    background: var(--iib-widget);
+    color: var(--iib-text);
+    box-shadow: 0 24px 60px rgb(0 0 0 / 45%);
+}
+
+.iib-workshop .share-head {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.iib-workshop .share-title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.iib-workshop .share-close {
+    margin-left: auto;
+    border: 0;
+    background: none;
+    color: var(--iib-subtle);
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.iib-workshop .share-close:hover {
+    color: var(--iib-text);
+}
+
+.iib-workshop .share-qr {
+    display: grid;
+    place-items: center;
+    padding: 16px;
+    border-radius: 10px;
+    /* The code has to stay dark-on-light whatever the app's mode: a phone camera reads the
+       contrast, not the theme. */
+    background: #ffffff;
+}
+
+.iib-workshop .share-qr svg {
+    display: block;
+    width: 100%;
+    max-width: 260px;
+    height: auto;
+}
+
+.iib-workshop .share-url {
+    margin: 12px 0 0;
+    font-size: 12px;
+    color: var(--iib-text);
+    overflow-wrap: anywhere;
+}
+
+.iib-workshop .share-note {
+    margin: 10px 0 0;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--iib-subtle);
+}
+
+/* The AG Studio wordmark is white, so it vanishes on the light sidebar. The logo is an
+   <img>, which CSS cannot reach inside, so invert it and turn the hue back: white goes to
+   near-black while the coloured mark keeps roughly its own hues. */
+.iib-workshop[data-ag-theme-mode='light'] .powered-by-logo {
+    filter: invert(1) hue-rotate(180deg);
+}

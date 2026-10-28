@@ -1,0 +1,565 @@
+/*
+ * Report Builder demo chrome.
+ *
+ * Self-contained by design: every colour, radius and type size reads through
+ * `var(--token, fallback)`, so the stylesheet stands alone in a bare Vite project and picks up a
+ * host design system's tokens automatically when one defines them. Spacing and breakpoints are
+ * written as literals - they were never themeable.
+ *
+ * Dark mode follows `[data-dark-mode='true']` on an ancestor. Nothing sets it in a standalone
+ * project, which leaves the light palette in force.
+ *
+ * Acme's own brand - Inter and its theme's navy accent - is stated outright rather than read
+ * from a host token, since the demo stands in for that customer's app.
+ */
+
+/* The widget fonts the demo's report state asks for (see data/mainDemoState.ts), and Acme's face. */
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+
+/*
+ * Scoped to the demo's own subtree, because the chrome's fixed widths and padding assume it: a
+ * host page that sets no reset of its own would otherwise render the sidebar wider than asked.
+ */
+.agd-rb,
+.agd-rb *,
+.agd-rb *::before,
+.agd-rb *::after {
+    box-sizing: border-box;
+}
+
+/* =============================================================================
+ * Shell: reports sidebar + Studio canvas, filling whatever the host gives it.
+ * ============================================================================= */
+
+.agd-rb {
+    --agd-rb-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --agd-rb-brand: #2f5d8c;
+
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    font-family: var(--agd-rb-font);
+    color: var(--color-fg-primary, #101828);
+}
+
+[data-dark-mode='true'] .agd-rb {
+    --agd-rb-brand: #6c9bd2;
+}
+
+.agd-rb .ag-studio-root.ag-root-wrapper {
+    border: none;
+}
+
+.agd-rb-body {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+}
+
+.agd-rb-sidebar {
+    /*
+     * Chrome surface. In dark mode it mirrors Studio's own studioWrapperBackgroundColor for the
+     * quartz dark-blue scheme, so the demo chrome and the canvas read as one surface.
+     */
+    background: var(--color-bg-secondary, #f9fafb);
+    /* Above the canvas so the profile menu, which opens upward, overlays it. */
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 240px;
+    flex-shrink: 0;
+    min-height: 0;
+    padding: 16px 12px 6px;
+    border-right: 1px solid var(--color-border-primary, #d0d5dd);
+}
+
+/* Studio's wrapper colour in Acme's theme's dark mode, so chrome and canvas read as one surface. */
+[data-dark-mode='true'] .agd-rb-sidebar {
+    background: #0f172a;
+}
+
+/*
+ * Stand-in customer brand (deliberately not AG Studio) so the demo reads as the visitor's own
+ * app. A plain square mark beside a two-weight wordmark.
+ */
+.agd-rb-brand {
+    padding: 0 8px 8px;
+    font-size: var(--text-fs-lg, 20px);
+    font-weight: 600;
+    line-height: 24px;
+    color: var(--color-fg-primary, #334155);
+}
+
+/* Inline rather than flex, so nothing comes between the wordmark's two halves. */
+.agd-rb-brand::before {
+    content: '';
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+    vertical-align: top;
+    border-radius: 6px;
+    background: var(--agd-rb-brand);
+}
+
+.agd-rb-brand-accent {
+    font-weight: 300;
+}
+
+.agd-rb-sidebar-heading {
+    padding: 0 8px;
+    font-size: var(--text-fs-xs, 12px);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-fg-tertiary, #475467);
+}
+
+/* =============================================================================
+ * Reports list.
+ * ============================================================================= */
+
+.agd-rb-reports-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+.agd-rb-report-item {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: var(--radius-sm, 6px);
+    background: transparent;
+    box-shadow: none;
+    font: inherit;
+    font-size: var(--text-fs-sm, 14px);
+    line-height: 20px;
+    font-weight: 500;
+    color: var(--color-fg-secondary, #344054);
+    text-align: left;
+    cursor: pointer;
+    transition: none;
+    flex-shrink: 0;
+}
+
+.agd-rb-report-item:hover {
+    background: var(--color-bg-primary, #fff);
+    color: var(--color-fg-primary, #101828);
+}
+
+.agd-rb-report-item:focus-visible {
+    outline: 2px solid var(--color-fg-tertiary, #475467);
+    outline-offset: 1px;
+}
+
+.agd-rb-report-item.active {
+    background: color-mix(in srgb, var(--color-fg-primary, #334155) 8%, transparent);
+    color: var(--color-fg-primary, #334155);
+    font-weight: 600;
+}
+
+/* Brand accent bar marking the selected report. */
+.agd-rb-report-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 6px;
+    bottom: 6px;
+    width: 3px;
+    border-radius: 999px;
+    background: var(--agd-rb-brand);
+}
+
+.agd-rb-report-item.active .agd-rb-report-icon {
+    color: var(--agd-rb-brand);
+}
+
+.agd-rb-report-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    color: var(--color-fg-quaternary);
+}
+
+.agd-rb-report-label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.agd-rb-new-report {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    margin-top: 4px;
+    padding: 8px;
+    border: 1px dashed var(--color-border-primary, #d0d5dd);
+    border-radius: var(--radius-sm, 6px);
+    background: transparent;
+    box-shadow: none;
+    font: inherit;
+    font-size: var(--text-fs-sm, 14px);
+    font-weight: 500;
+    color: var(--color-fg-quaternary);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.agd-rb-new-report:hover {
+    background: var(--color-bg-primary, #fff);
+    border-color: var(--color-fg-tertiary, #475467);
+    color: var(--color-fg-secondary, #344054);
+}
+
+.agd-rb-new-report:focus-visible {
+    outline: 2px solid var(--color-fg-tertiary, #475467);
+    outline-offset: 1px;
+}
+
+.agd-rb-new-report-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+}
+
+/*
+ * Rename input. Fills the report item exactly so entering rename mode never resizes the item or
+ * the sidebar, and reads as one clean editable field.
+ */
+.agd-rb-rename-input {
+    position: absolute;
+    inset: 0;
+    width: auto;
+    padding: 0 8px;
+    border: 1px solid var(--color-input-border, #d0d5dd);
+    border-radius: var(--radius-sm, 6px);
+    background: var(--color-bg-primary, #fff);
+    color: var(--color-fg-primary, #101828);
+    font: inherit;
+    font-size: var(--text-fs-sm, 14px);
+}
+
+/*
+ * A host's global input focus ring is typically outset, which the sidebar would clip - replace it
+ * with a single 1px brand border.
+ */
+.agd-rb-rename-input:focus,
+.agd-rb-rename-input:focus-visible {
+    outline: none;
+    border-color: var(--agd-rb-brand);
+    box-shadow: none;
+}
+
+/* =============================================================================
+ * Profile switcher: account button pinned to the bottom of the sidebar + the menu of demo
+ * personas it opens (upward). Viewer is read-only, Analyst edits.
+ * ============================================================================= */
+
+.agd-rb-profile-switcher {
+    position: relative;
+    flex-shrink: 0;
+    /* Pinned to the bottom of the sidebar, with a divider above. */
+    margin-top: auto;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-border-primary, #d0d5dd);
+}
+
+.agd-rb-profile-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 4px 8px;
+    border: 1px solid transparent;
+    border-radius: var(--radius-md, 8px);
+    background: transparent;
+    box-shadow: none;
+    font: inherit;
+    cursor: pointer;
+    transition: background-color 0.25s ease-in-out;
+}
+
+.agd-rb-profile-button:hover {
+    background: var(--color-bg-primary, #fff);
+    border-color: var(--color-border-primary, #d0d5dd);
+}
+
+.agd-rb-profile-button:focus-visible {
+    outline: 2px solid var(--color-fg-tertiary, #475467);
+    outline-offset: 1px;
+}
+
+.agd-rb-profile-button[aria-expanded='true'] {
+    background: var(--color-bg-primary, #fff);
+    border-color: var(--color-border-primary, #d0d5dd);
+}
+
+.agd-rb-profile-button[aria-expanded='true'] .agd-rb-profile-chevron {
+    transform: rotate(180deg);
+}
+
+.agd-rb-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+    border-radius: 999px;
+    background: var(--agd-rb-brand);
+    color: var(--color-white, #fff);
+    font-size: var(--text-fs-xs, 12px);
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1;
+}
+
+.agd-rb-profile-identity {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    min-width: 0;
+}
+
+.agd-rb-profile-name {
+    font-size: var(--text-fs-sm, 14px);
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--color-fg-primary, #101828);
+    white-space: nowrap;
+}
+
+.agd-rb-profile-role {
+    font-size: var(--text-fs-xs, 12px);
+    line-height: 1.2;
+    color: var(--color-fg-tertiary, #475467);
+    white-space: nowrap;
+}
+
+.agd-rb-profile-chevron {
+    width: 10px;
+    height: 10px;
+    flex-shrink: 0;
+    margin-left: auto;
+    color: var(--color-fg-tertiary, #475467);
+    fill: currentcolor;
+    transition: transform 0.25s ease-in-out;
+}
+
+.agd-rb-profile-menu {
+    position: absolute;
+    /* Opens upward from the bottom-of-sidebar button, matching its width. */
+    bottom: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 8px;
+    border: 1px solid var(--color-border-primary, #d0d5dd);
+    border-radius: var(--radius-md, 8px);
+    background: var(--color-bg-primary, #fff);
+    box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+}
+
+/* Author styles beat the UA `[hidden]` rule, so restate it here. */
+.agd-rb-profile-menu[hidden] {
+    display: none;
+}
+
+.agd-rb-profile-menu-heading {
+    padding: 4px 8px;
+    font-size: var(--text-fs-xs, 12px);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-fg-tertiary, #475467);
+}
+
+.agd-rb-profile-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: var(--radius-sm, 6px);
+    background: transparent;
+    box-shadow: none;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.agd-rb-profile-option:hover {
+    background: var(--color-bg-secondary, #f9fafb);
+}
+
+.agd-rb-profile-option:focus-visible {
+    outline: 2px solid var(--color-fg-tertiary, #475467);
+    outline-offset: -2px;
+}
+
+/* The tick keeps its space when inactive so the rows never shift on switch. */
+.agd-rb-profile-option[aria-checked='false'] .agd-rb-profile-tick {
+    visibility: hidden;
+}
+
+.agd-rb-profile-tick {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    margin-left: auto;
+    color: var(--agd-rb-brand);
+    fill: currentcolor;
+}
+
+/* =============================================================================
+ * Studio canvas.
+ * ============================================================================= */
+
+.agd-rb-canvas-wrap {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+}
+
+.agd-rb-canvas {
+    --ag-studio-wrapper-border: none;
+
+    flex: 1;
+    min-height: 0;
+    height: 100%;
+    -webkit-font-smoothing: initial;
+}
+
+.agd-rb-canvas .ag-studio-layout {
+    padding-top: 16px;
+    scrollbar-width: thin;
+}
+
+.agd-rb-canvas .ag-studio-layout::-webkit-scrollbar {
+    width: 6px;
+}
+
+.agd-rb-canvas .ag-studio-layout::-webkit-scrollbar-thumb {
+    background: rgb(0 0 0 / 20%);
+    border-radius: 3px;
+}
+
+.agd-rb-canvas .ag-studio-root-panel-container-right {
+    margin-top: 16px;
+}
+
+/* =============================================================================
+ * Headline KPI custom widget. Colours read Studio's own theme variables, so the widget follows
+ * the theme's light and dark modes with no styling of its own per mode.
+ * ============================================================================= */
+
+.agd-kpi {
+    --agd-kpi-positive: #10b981;
+    --agd-kpi-negative: #f43f5e;
+    --agd-kpi-neutral: var(--ag-subtle-text-color, #64748b);
+
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    height: 100%;
+    padding: 2px 8px 8px;
+    font-family: var(--agd-rb-font);
+    color: var(--ag-text-color, #334155);
+}
+
+.agd-kpi-value {
+    font-size: clamp(20px, 10cqw, 26px);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    font-variant-numeric: tabular-nums;
+}
+
+.agd-kpi-change {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--ag-subtle-text-color, #64748b);
+}
+
+.agd-kpi-change-label {
+    --agd-kpi-tone: var(--agd-kpi-neutral);
+
+    display: inline-flex;
+    align-items: baseline;
+    gap: 4px;
+    /* Mixed towards the text colour, so it darkens on a light theme and lightens on a dark one. */
+    color: color-mix(in srgb, var(--agd-kpi-tone) 80%, var(--ag-text-color, #334155));
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.agd-kpi-change-label[data-sentiment='positive'] {
+    --agd-kpi-tone: var(--agd-kpi-positive);
+}
+
+.agd-kpi-change-label[data-sentiment='negative'] {
+    --agd-kpi-tone: var(--agd-kpi-negative);
+}
+
+.agd-kpi-change-label::before {
+    font-size: 8px;
+}
+
+.agd-kpi-change-label[data-direction='up']::before {
+    content: '\25B2';
+}
+
+.agd-kpi-change-label[data-direction='down']::before {
+    content: '\25BC';
+}
+
+.agd-kpi-target {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--ag-subtle-text-color, #64748b);
+}
+
+.agd-kpi-target-track {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--ag-border-color, #e2e8f0);
+    overflow: hidden;
+}
+
+.agd-kpi-target-fill {
+    height: 100%;
+    background: var(--ag-accent-color, #0ea5e9);
+}
+
+/* Author styles beat the UA `[hidden]` rule, so restate it here. */
+.agd-kpi [hidden] {
+    display: none;
+}

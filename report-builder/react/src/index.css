@@ -1,0 +1,10 @@
+/* The host page's own concern: give the demo the whole viewport to fill. */
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+
+#root {
+    height: 100%;
+}
