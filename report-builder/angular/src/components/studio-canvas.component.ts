@@ -1,16 +1,9 @@
 import { Component, input, output } from '@angular/core';
-import type { AgStudioApi, AgStudioProperties, AgWidgetsConfig } from 'ag-studio';
-import { AgStudio, createWidgets } from 'ag-studio-angular';
+import type { AgStudioApi, AgStudioProperties } from 'ag-studio';
+import { AgStudio } from 'ag-studio-angular';
 
-import type { ReportBuilderRegistry, ReportBuilderStudioOptions } from '../shared';
-import { HEADLINE_KPI_WIDGET, reportBuilderProperties } from '../shared';
-import { HeadlineKpiComponent } from './headline-kpi.component';
-
-const widgets = (widgetConfig: AgWidgetsConfig<ReportBuilderRegistry>) =>
-    createWidgets<ReportBuilderRegistry>({
-        additionalTypes: [{ ...HEADLINE_KPI_WIDGET, comp: HeadlineKpiComponent }],
-        menu: [{ label: 'Custom', widgetIds: ['headlineKpi'] }, ...widgetConfig.menu],
-    });
+import type { ReportBuilderStudioOptions } from '../shared';
+import { reportBuilderProperties } from '../shared';
 
 /**
  * Renders Studio through `ag-studio-angular` - the integration an Angular application actually
@@ -39,8 +32,8 @@ export class StudioCanvasComponent {
     public readonly options = input<ReportBuilderStudioOptions>({});
     public readonly ready = output<AgStudioApi | undefined>();
 
-    protected readonly studioProperties: AgStudioProperties<ReportBuilderRegistry> = {
-        ...reportBuilderProperties(widgets, this.options()),
+    protected readonly studioProperties: AgStudioProperties = {
+        ...reportBuilderProperties(this.options()),
         onApiReady: ({ api }) => this.ready.emit(api),
         onStudioPreDestroyed: () => this.ready.emit(undefined),
     };

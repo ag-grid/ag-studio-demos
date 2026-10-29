@@ -1,15 +1,8 @@
-import type {
-    AgDataSourcesDefinition,
-    AgPanelsState,
-    AgStudioApi,
-    AgStudioProperties,
-    AgStudioThemeParams,
-} from 'ag-studio';
+import type { AgPanelsState, AgStudioApi, AgStudioProperties, AgStudioThemeParams } from 'ag-studio';
 import { createStudio, enableStudioDevValidations, studioTheme } from 'ag-studio';
 import seedrandom from 'seedrandom';
 
 import { getMainDemoDataGenerated, mainDemoCalendar, mainDemoReports } from './data/mainDemoData';
-import type { ReportBuilderRegistry } from './interfaces';
 import { reportBuilderState } from './state';
 
 /**
@@ -34,9 +27,9 @@ export const reportBuilderReports = mainDemoReports;
 const INTER = "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif";
 
 /**
- * Acme's own theme: Inter, compact semibold titles, 4px corners and a muted navy palette, sober
- * enough to read as an enterprise BI tool. Typography, shape and series palette are the same in
- * both modes; only the surfaces differ.
+ * Acme's own theme: Inter, compact semibold titles, 4px corners and a bright blue-led palette with
+ * warm accents. Typography, shape and series palette are the same in both modes; only the surfaces
+ * differ.
  */
 const acmeParams: Partial<AgStudioThemeParams> = {
     fontFamily: INTER,
@@ -67,38 +60,45 @@ const acmeParams: Partial<AgStudioThemeParams> = {
     gridRowBorder: false,
     chartTooltipBorder: false,
 
-    chartPaletteFills1Color: '#2F5D8C',
-    chartPaletteFills2Color: '#5B9AA0',
-    chartPaletteFills3Color: '#8B9DB5',
-    chartPaletteFills4Color: '#C7953D',
-    chartPaletteFills5Color: '#7C6BA0',
-    chartPaletteFills6Color: '#B4574F',
+    chartPaletteFills1Color: '#2D6FE0',
+    chartPaletteFills2Color: '#19B5C9',
+    chartPaletteFills3Color: '#FF8A3D',
+    chartPaletteFills4Color: '#F2545B',
+    chartPaletteFills5Color: '#8B6CF0',
+    chartPaletteFills6Color: '#FFC145',
+    // Lines and outlines match the fills; left unset, they take Studio's default palette instead.
+    chartPaletteStrokes1Color: '#2D6FE0',
+    chartPaletteStrokes2Color: '#19B5C9',
+    chartPaletteStrokes3Color: '#FF8A3D',
+    chartPaletteStrokes4Color: '#F2545B',
+    chartPaletteStrokes5Color: '#8B6CF0',
+    chartPaletteStrokes6Color: '#FFC145',
 };
 
-/** Neutral light surfaces under near-black text. */
+/** White widgets on a faint blue canvas, under navy text. */
 const acmeLightColors: Partial<AgStudioThemeParams> = {
-    accentColor: '#2F5D8C',
+    accentColor: '#2D6FE0',
     backgroundColor: '#FFFFFF',
-    foregroundColor: '#1F2937',
-    borderColor: '#E5E7EB',
-    studioWrapperBackgroundColor: '#F5F6F8',
-    studioCanvasBackgroundColor: '#F5F6F8',
-    chartGridLineColor: '#F1F5F9',
+    foregroundColor: '#14254A',
+    borderColor: '#DCE6F5',
+    studioWrapperBackgroundColor: '#F2F6FD',
+    studioCanvasBackgroundColor: '#F2F6FD',
+    chartGridLineColor: '#EDF2FA',
     browserColorScheme: 'light',
 };
 
 /**
- * Dark surfaces from a slate scale, with a lighter navy accent. The wrapper matches the demo
+ * Dark surfaces from a navy scale, with a lighter blue accent. The wrapper matches the demo
  * chrome's dark sidebar.
  */
 const acmeDarkColors: Partial<AgStudioThemeParams> = {
-    accentColor: '#6C9BD2',
-    backgroundColor: '#1E293B',
+    accentColor: '#5B9BFF',
+    backgroundColor: '#13213F',
     foregroundColor: '#E2E8F0',
-    borderColor: '#334155',
-    studioWrapperBackgroundColor: '#0F172A',
-    studioCanvasBackgroundColor: '#0F172A',
-    chartGridLineColor: '#334155',
+    borderColor: '#23355C',
+    studioWrapperBackgroundColor: '#0B1630',
+    studioCanvasBackgroundColor: '#0B1630',
+    chartGridLineColor: '#23355C',
     browserColorScheme: 'dark',
 };
 
@@ -121,7 +121,7 @@ export interface ReportBuilderStudioOptions {
     /** AI configuration handed straight to Studio. Omit to run with no AI panel backing. */
     ai?: AgStudioProperties['ai'];
     /** Merged over the demo's own Studio properties, last. For host-side experiments only. */
-    studioOverrides?: Partial<AgStudioProperties<ReportBuilderRegistry>>;
+    studioOverrides?: Partial<AgStudioProperties>;
 }
 
 /**
@@ -132,14 +132,8 @@ export interface ReportBuilderStudioOptions {
  * in Angular - so the starter shows the integration a developer adopting Studio will actually
  * write. Only the plain-TypeScript variant creates the instance itself, through
  * `createReportBuilderStudio` below.
- *
- * `widgets` adds the demo's Headline KPI to the built-in catalogue. Each variant builds it with its
- * own framework's `createWidgets`, since the widget's component is written in that framework.
  */
-export function reportBuilderProperties(
-    widgets: AgStudioProperties<ReportBuilderRegistry>['widgets'],
-    options: ReportBuilderStudioOptions = {}
-): AgStudioProperties<ReportBuilderRegistry> {
+export function reportBuilderProperties(options: ReportBuilderStudioOptions = {}): AgStudioProperties {
     const { initialReportId, devValidations, ai, studioOverrides } = options;
 
     // Must precede the first Studio instance; a no-op on every mount after the first.
@@ -150,13 +144,10 @@ export function reportBuilderProperties(
     const data = getMainDemoDataGenerated((seed) => seedrandom(seed));
 
     return {
-        // The dataset is declared against the default registry and uses only built-in formats, so it
-        // holds for this one too; Studio's types compare registries whole and cannot see that.
-        data: { ...data, calendars: [mainDemoCalendar] } as AgDataSourcesDefinition<ReportBuilderRegistry>,
+        data: { ...data, calendars: [mainDemoCalendar] },
         mode: 'edit',
         theme: acmeTheme,
         layout: { widgetBorderEnabled: true },
-        widgets,
         initialState: {
             ...reportBuilderState,
             panels: COLLAPSED_PANELS,
@@ -177,12 +168,8 @@ export function reportBuilderProperties(
 }
 
 /** Mount Studio on `canvas` directly. For the plain-TypeScript variant, which has no wrapper. */
-export function createReportBuilderStudio(
-    canvas: HTMLElement,
-    widgets: AgStudioProperties<ReportBuilderRegistry>['widgets'],
-    options: ReportBuilderStudioOptions = {}
-): AgStudioApi<ReportBuilderRegistry> {
-    return createStudio<ReportBuilderRegistry>(canvas, reportBuilderProperties(widgets, options));
+export function createReportBuilderStudio(canvas: HTMLElement, options: ReportBuilderStudioOptions = {}): AgStudioApi {
+    return createStudio(canvas, reportBuilderProperties(options));
 }
 
 /** A blank report page, as both variants' New report button appends. */

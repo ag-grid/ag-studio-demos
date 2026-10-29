@@ -1,0 +1,28 @@
+{
+  "name": "service-health-vue3",
+  "version": "3.0.0",
+  "description": "AG Studio Real-time Dashboard demo - Vue 3",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "ag-charts-enterprise": "14.2.0-beta.20261028",
+    "ag-studio": "latest",
+    "ag-studio-vue3": "latest",
+    "seedrandom": "^3.0.5",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.6",
+    "@types/seedrandom": "^3.0.8",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "typescript": "~5.8.3",
+    "vite": "~5.4.19",
+    "vue-tsc": "^3.3.11"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name": "service-health-typescript",
+  "version": "3.0.0",
+  "description": "AG Studio Real-time Dashboard demo - TypeScript",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "ag-charts-enterprise": "14.2.0-beta.20261028",
+    "ag-studio": "latest",
+    "seedrandom": "^3.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.6",
+    "@types/seedrandom": "^3.0.8",
+    "typescript": "~5.8.3",
+    "vite": "~5.4.19"
+  }
+}

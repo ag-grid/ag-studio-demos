@@ -1,26 +1,16 @@
-import type { AgStudioApi, AgWidgetsConfig } from 'ag-studio';
-import { createWidgets } from 'ag-studio';
+import type { AgStudioApi } from 'ag-studio';
 
 import type { ReportBuilderChrome } from './chrome';
 import { createChrome, createReportButton, reportLabel, setReportName } from './chrome';
-import { HeadlineKpi } from './headlineKpi';
-import type { DemoProfile, ReportBuilderRegistry, ReportBuilderStudioOptions } from './shared';
+import type { DemoProfile, ReportBuilderStudioOptions } from './shared';
 import {
     BRAND,
-    HEADLINE_KPI_WIDGET,
     createBlankReport,
     createReportBuilderStudio,
     defaultProfile,
     demoProfiles,
     reportBuilderReports,
 } from './shared';
-
-/** Studio's built-in widgets plus the demo's Headline KPI, backed by this variant's component. */
-export const reportBuilderWidgets = (widgetConfig: AgWidgetsConfig<ReportBuilderRegistry>) =>
-    createWidgets<ReportBuilderRegistry>({
-        additionalTypes: [{ ...HEADLINE_KPI_WIDGET, comp: HeadlineKpi }],
-        menu: [{ label: 'Custom', widgetIds: ['headlineKpi'] }, ...widgetConfig.menu],
-    });
 
 export interface ReportBuilderDemoOptions extends ReportBuilderStudioOptions {
     /**
@@ -36,16 +26,11 @@ export interface ReportBuilderDemoOptions extends ReportBuilderStudioOptions {
      * for the selection changes that follow creating or discarding a report.
      */
     onReportSelect?: (reportId: string) => void;
-    /**
-     * Wraps the widget catalogue, for a host that needs to decorate the widgets. Applied around
-     * the catalogue rather than in place of it, so the demo's Headline KPI stays registered.
-     */
-    decorateWidgets?: (widgets: AgWidgetsConfig<ReportBuilderRegistry>) => AgWidgetsConfig<ReportBuilderRegistry>;
 }
 
 export interface ReportBuilderDemo {
     /** The underlying Studio instance, for hosts that drive it further. */
-    readonly api: AgStudioApi<ReportBuilderRegistry>;
+    readonly api: AgStudioApi;
     /** Show a report, without calling back into `onReportSelect`. */
     selectReport: (reportId: string) => void;
     /** Tear down Studio, the chrome and every listener the demo registered. */
@@ -53,7 +38,7 @@ export interface ReportBuilderDemo {
 }
 
 class ReportBuilderDemoImpl implements ReportBuilderDemo {
-    public readonly api: AgStudioApi<ReportBuilderRegistry>;
+    public readonly api: AgStudioApi;
 
     private readonly chrome: ReportBuilderChrome;
     private readonly onReportSelect?: (reportId: string) => void;
@@ -70,7 +55,7 @@ class ReportBuilderDemoImpl implements ReportBuilderDemo {
     private reportSeq = 0;
 
     constructor(options: ReportBuilderDemoOptions) {
-        const { container, onReportSelect, decorateWidgets, ...studioOptions } = options;
+        const { container, onReportSelect, ...studioOptions } = options;
         const { initialReportId } = studioOptions;
 
         this.onReportSelect = onReportSelect;
@@ -82,11 +67,7 @@ class ReportBuilderDemoImpl implements ReportBuilderDemo {
             brand: BRAND,
         });
 
-        const widgets = (config: AgWidgetsConfig<ReportBuilderRegistry>) => {
-            const catalogue = reportBuilderWidgets(config);
-            return decorateWidgets ? decorateWidgets(catalogue) : catalogue;
-        };
-        this.api = createReportBuilderStudio(this.chrome.canvas, widgets, studioOptions);
+        this.api = createReportBuilderStudio(this.chrome.canvas, studioOptions);
 
         if (initialReportId) {
             this.updateReportDisplay(initialReportId);

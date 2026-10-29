@@ -36,17 +36,6 @@ expression.
 - [`widget-library/vue3`](./widget-library/vue3)
 - [`widget-library/angular`](./widget-library/angular)
 
-### In-App Reporting
-
-AG Studio widgets embedded in someone else's document - a peer-group research page - styled to
-match it, with the host application owning the data and the surrounding chrome. Right-click a
-company to drill through to a full Studio report on it, opened in a popup as a print-ready A4 page.
-
-- [`embedded-analytics/typescript`](./embedded-analytics/typescript)
-- [`embedded-analytics/react`](./embedded-analytics/react)
-- [`embedded-analytics/vue3`](./embedded-analytics/vue3)
-- [`embedded-analytics/angular`](./embedded-analytics/angular)
-
 ### IIB Workshop
 
 The starter for the AG Studio x Information is Beautiful workshop: an AG Studio dashboard over
@@ -75,9 +64,10 @@ Each project needs an AG Studio licence key to run without a watermark. See
 
 ## This is the dev branch
 
-These starters track AG Studio `latest`, and pin `3.0.0-beta.20261024.2300` - a nightly build, not a
-release. They use APIs that the released version does not have, so they do **not** build
-against it. The default branch carries starters that do.
+These starters track AG Studio `latest`, which means the newest nightly on AG Grid's
+registry - `3.0.0-beta.20261029.732` at the time this was published, and whatever is newest when you
+install. They use APIs the released version does not have, so they do **not** build against
+it. The default branch carries starters that do.
 
 The nightly is published to AG Grid's registry rather than to npm, so point npm at it
 before installing - in the project you copied out, or globally:

@@ -27,14 +27,16 @@ export const executivePage: AgPageState =
                 type: 'value',
                 dataMapping: { value: [{ id: 'net_sales' }] },
                 format: {
-                    caption: {
-                        enabled: true,
-                        text: 'Net Sales',
-                        typography: {
-                            fontFamily: '"Source Sans 3", sans-serif',
-                            fontSize: 20,
-                            fontWeight: 'normal',
-                            fontStyle: 'normal',
+                    style: {
+                        label: {
+                            enabled: true,
+                            text: 'Net Sales',
+                            typography: {
+                                fontFamily: '"Source Sans 3", sans-serif',
+                                fontSize: 20,
+                                fontWeight: 'normal',
+                                fontStyle: 'normal',
+                            },
                         },
                     },
                 },
@@ -43,14 +45,16 @@ export const executivePage: AgPageState =
                 type: 'value',
                 dataMapping: { value: [{ id: 'order_count' }] },
                 format: {
-                    caption: {
-                        enabled: true,
-                        text: 'Order Count',
-                        typography: {
-                            fontFamily: '"Source Sans 3", sans-serif',
-                            fontSize: 20,
-                            fontWeight: 'normal',
-                            fontStyle: 'normal',
+                    style: {
+                        label: {
+                            enabled: true,
+                            text: 'Order Count',
+                            typography: {
+                                fontFamily: '"Source Sans 3", sans-serif',
+                                fontSize: 20,
+                                fontWeight: 'normal',
+                                fontStyle: 'normal',
+                            },
                         },
                     },
                 },
@@ -59,14 +63,16 @@ export const executivePage: AgPageState =
                 type: 'value',
                 dataMapping: { value: [{ id: 'average_order_value' }] },
                 format: {
-                    caption: {
-                        enabled: true,
-                        text: 'AOV',
-                        typography: {
-                            fontFamily: '"Source Sans 3", sans-serif',
-                            fontSize: 20,
-                            fontWeight: 'normal',
-                            fontStyle: 'normal',
+                    style: {
+                        label: {
+                            enabled: true,
+                            text: 'AOV',
+                            typography: {
+                                fontFamily: '"Source Sans 3", sans-serif',
+                                fontSize: 20,
+                                fontWeight: 'normal',
+                                fontStyle: 'normal',
+                            },
                         },
                     },
                 },
@@ -75,14 +81,16 @@ export const executivePage: AgPageState =
                 type: 'value',
                 dataMapping: { value: [{ id: 'gross_margin_percentage' }] },
                 format: {
-                    caption: {
-                        enabled: true,
-                        text: 'Gross Margin %',
-                        typography: {
-                            fontFamily: '"Source Sans 3", sans-serif',
-                            fontSize: 20,
-                            fontWeight: 'normal',
-                            fontStyle: 'normal',
+                    style: {
+                        label: {
+                            enabled: true,
+                            text: 'Gross Margin %',
+                            typography: {
+                                fontFamily: '"Source Sans 3", sans-serif',
+                                fontSize: 20,
+                                fontWeight: 'normal',
+                                fontStyle: 'normal',
+                            },
                         },
                     },
                 },
@@ -91,14 +99,16 @@ export const executivePage: AgPageState =
                 type: 'value',
                 dataMapping: { value: [{ id: 'on_time_rate' }] },
                 format: {
-                    caption: {
-                        enabled: true,
-                        text: 'On-time Rate',
-                        typography: {
-                            fontFamily: '"Source Sans 3", sans-serif',
-                            fontSize: 20,
-                            fontWeight: 'normal',
-                            fontStyle: 'normal',
+                    style: {
+                        label: {
+                            enabled: true,
+                            text: 'On-time Rate',
+                            typography: {
+                                fontFamily: '"Source Sans 3", sans-serif',
+                                fontSize: 20,
+                                fontWeight: 'normal',
+                                fontStyle: 'normal',
+                            },
                         },
                     },
                 },
@@ -107,14 +117,16 @@ export const executivePage: AgPageState =
                 type: 'value',
                 dataMapping: { value: [{ id: 'return_rate' }] },
                 format: {
-                    caption: {
-                        enabled: true,
-                        text: 'Return Rate',
-                        typography: {
-                            fontFamily: '"Source Sans 3", sans-serif',
-                            fontSize: 20,
-                            fontWeight: 'normal',
-                            fontStyle: 'normal',
+                    style: {
+                        label: {
+                            enabled: true,
+                            text: 'Return Rate',
+                            typography: {
+                                fontFamily: '"Source Sans 3", sans-serif',
+                                fontSize: 20,
+                                fontWeight: 'normal',
+                                fontStyle: 'normal',
+                            },
                         },
                     },
                 },
@@ -353,14 +365,16 @@ export const fulfilmentPage: AgPageState =
                 type: 'value',
                 dataMapping: { value: [{ id: 'shipped_orders' }] },
                 format: {
-                    caption: {
-                        enabled: true,
-                        text: 'Orders Shipped',
-                        typography: {
-                            fontFamily: '"Source Sans 3", sans-serif',
-                            fontSize: 20,
-                            fontWeight: 'normal',
-                            fontStyle: 'normal',
+                    style: {
+                        label: {
+                            enabled: true,
+                            text: 'Orders Shipped',
+                            typography: {
+                                fontFamily: '"Source Sans 3", sans-serif',
+                                fontSize: 20,
+                                fontWeight: 'normal',
+                                fontStyle: 'normal',
+                            },
                         },
                     },
                 },
@@ -369,14 +383,16 @@ export const fulfilmentPage: AgPageState =
                 type: 'value',
                 dataMapping: { value: [{ id: 'delivered_orders' }] },
                 format: {
-                    caption: {
-                        enabled: true,
-                        text: 'Orders Delivered',
-                        typography: {
-                            fontFamily: '"Source Sans 3", sans-serif',
-                            fontSize: 20,
-                            fontWeight: 'normal',
-                            fontStyle: 'normal',
+                    style: {
+                        label: {
+                            enabled: true,
+                            text: 'Orders Delivered',
+                            typography: {
+                                fontFamily: '"Source Sans 3", sans-serif',
+                                fontSize: 20,
+                                fontWeight: 'normal',
+                                fontStyle: 'normal',
+                            },
                         },
                     },
                 },
@@ -385,14 +401,16 @@ export const fulfilmentPage: AgPageState =
                 type: 'value',
                 dataMapping: { value: [{ id: 'avg_ship_to_delivery_days' }] },
                 format: {
-                    caption: {
-                        enabled: true,
-                        text: 'Avg Ship to Delivery Days',
-                        typography: {
-                            fontFamily: '"Source Sans 3", sans-serif',
-                            fontSize: 20,
-                            fontWeight: 'normal',
-                            fontStyle: 'normal',
+                    style: {
+                        label: {
+                            enabled: true,
+                            text: 'Avg Ship to Delivery Days',
+                            typography: {
+                                fontFamily: '"Source Sans 3", sans-serif',
+                                fontSize: 20,
+                                fontWeight: 'normal',
+                                fontStyle: 'normal',
+                            },
                         },
                     },
                 },
@@ -524,14 +542,16 @@ export const returnsPage: AgPageState =
                 type: 'value',
                 dataMapping: { value: [{ id: 'return_rate' }] },
                 format: {
-                    caption: {
-                        enabled: true,
-                        text: 'Return Rate (Lines)',
-                        typography: {
-                            fontFamily: '"Source Sans 3", sans-serif',
-                            fontSize: 20,
-                            fontWeight: 'normal',
-                            fontStyle: 'normal',
+                    style: {
+                        label: {
+                            enabled: true,
+                            text: 'Return Rate (Lines)',
+                            typography: {
+                                fontFamily: '"Source Sans 3", sans-serif',
+                                fontSize: 20,
+                                fontWeight: 'normal',
+                                fontStyle: 'normal',
+                            },
                         },
                     },
                 },
@@ -540,14 +560,16 @@ export const returnsPage: AgPageState =
                 type: 'value',
                 dataMapping: { value: [{ id: 'return_value' }] },
                 format: {
-                    caption: {
-                        enabled: true,
-                        text: 'Return Value',
-                        typography: {
-                            fontFamily: '"Source Sans 3", sans-serif',
-                            fontSize: 20,
-                            fontWeight: 'normal',
-                            fontStyle: 'normal',
+                    style: {
+                        label: {
+                            enabled: true,
+                            text: 'Return Value',
+                            typography: {
+                                fontFamily: '"Source Sans 3", sans-serif',
+                                fontSize: 20,
+                                fontWeight: 'normal',
+                                fontStyle: 'normal',
+                            },
                         },
                     },
                 },
@@ -556,14 +578,16 @@ export const returnsPage: AgPageState =
                 type: 'value',
                 dataMapping: { value: [{ id: 'return_margin_impact' }] },
                 format: {
-                    caption: {
-                        enabled: true,
-                        text: 'Return Margin Impact',
-                        typography: {
-                            fontFamily: '"Source Sans 3", sans-serif',
-                            fontSize: 20,
-                            fontWeight: 'normal',
-                            fontStyle: 'normal',
+                    style: {
+                        label: {
+                            enabled: true,
+                            text: 'Return Margin Impact',
+                            typography: {
+                                fontFamily: '"Source Sans 3", sans-serif',
+                                fontSize: 20,
+                                fontWeight: 'normal',
+                                fontStyle: 'normal',
+                            },
                         },
                     },
                 },

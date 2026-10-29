@@ -1,44 +1,36 @@
-import type { AgFilterState, AgPageState, AgReportState } from 'ag-studio';
+import type { AgFilterState, AgPageState, AgReportState, AgValueWidget } from 'ag-studio';
 
 import { executivePage, fulfilmentPage, mainDemoState, salesPerformancePage } from './data/mainDemoState';
-import type { HeadlineKpiDef, HeadlineKpiStyle, ReportBuilderRegistry } from './interfaces';
 
 /**
  * The Report Builder's own Executive Overview, in place of the plainer one the rest of the site
- * shares: headline KPIs from the demo's custom widget, then a trend, channel and regional splits, and
+ * shares: headline KPIs with a monthly sparkline each, then a trend, channel and regional splits, and
  * a category table. The other reports are the shared ones, except that every pie here shows its
  * labels and the shared Executive Overview's product pivot moves to Sales & Margin.
  */
 
-const SINCE_2024: AgFilterState<ReportBuilderRegistry> = {
+const SINCE_2024: AgFilterState = {
     field: { id: 'calendar::year' },
     view: { expanded: false },
     model: { operator: 'greaterThanOrEqual', value: 2024 },
 };
 
-/**
- * The data runs into January 2026, so a headline KPI stops at the last complete year rather than
- * comparing a single month with the twelve before it.
- */
-const COMPLETE_YEARS: AgFilterState<ReportBuilderRegistry> = {
-    field: { id: 'calendar::year' },
-    view: { expanded: false },
-    model: { operator: 'lessThanOrEqual', value: 2025 },
-};
-
-function headlineKpi(title: string, valueId: string, style: HeadlineKpiStyle): HeadlineKpiDef {
+function kpiWithTrend(title: string, valueId: string): AgValueWidget {
     return {
-        type: 'headlineKpi',
+        type: 'value',
         dataMapping: {
             value: [{ id: valueId }],
-            period: [{ id: 'calendar::year' }],
+            sparklineX: [{ id: 'calendar::month' }],
         },
-        format: { title: { enabled: true, text: title, typography: { fontSize: 14 } }, style },
+        format: {
+            title: { enabled: true, text: title },
+            style: { sparkline: { lineWidth: 2 } },
+        },
     };
 }
 
 /** Also the homepage hero's dashboard, so it is laid out to fit the hero's frame without scrolling. */
-export const executiveOverviewPage: AgPageState<ReportBuilderRegistry> = {
+export const executiveOverviewPage: AgPageState = {
     id: executivePage.id,
     widgets: {
         'page-title-executive': {
@@ -55,13 +47,10 @@ export const executiveOverviewPage: AgPageState<ReportBuilderRegistry> = {
             },
         },
 
-        'kpi-net-sales': headlineKpi('Net Sales', 'net_sales', { target: 13_500_000 }),
-        'kpi-gross-margin': headlineKpi('Gross Margin', 'gross_margin_percentage', {
-            changeAs: 'points',
-            target: 0.36,
-        }),
-        'kpi-order-count': headlineKpi('Orders', 'order_count', { target: 15_000 }),
-        'kpi-on-time-rate': headlineKpi('On-time Delivery', 'on_time_rate', { changeAs: 'points', target: 0.9 }),
+        'kpi-net-sales': kpiWithTrend('Net Sales', 'net_sales'),
+        'kpi-gross-margin': kpiWithTrend('Gross Margin', 'gross_margin_percentage'),
+        'kpi-order-count': kpiWithTrend('Orders', 'order_count'),
+        'kpi-on-time-rate': kpiWithTrend('On-time Delivery', 'on_time_rate'),
 
         'net-sales-by-month': {
             type: 'combo-chart-grouped-column-line',
@@ -157,16 +146,10 @@ export const executiveOverviewPage: AgPageState<ReportBuilderRegistry> = {
     },
     filter: {
         page: [SINCE_2024],
-        widget: {
-            'kpi-net-sales': [COMPLETE_YEARS],
-            'kpi-gross-margin': [COMPLETE_YEARS],
-            'kpi-order-count': [COMPLETE_YEARS],
-            'kpi-on-time-rate': [COMPLETE_YEARS],
-        },
     },
 };
 
-const labelledFulfilmentPage: AgPageState<ReportBuilderRegistry> = {
+const labelledFulfilmentPage: AgPageState = {
     ...fulfilmentPage,
     widgets: {
         ...fulfilmentPage.widgets,
@@ -189,7 +172,7 @@ const labelledFulfilmentPage: AgPageState<ReportBuilderRegistry> = {
 
 const { widgets: executiveWidgets = {} } = executivePage;
 
-const salesWithProductMixPage: AgPageState<ReportBuilderRegistry> = {
+const salesWithProductMixPage: AgPageState = {
     ...salesPerformancePage,
     widgets: { ...salesPerformancePage.widgets, 'product-mix': executiveWidgets['product-mix'] },
     widgetLayout: {
@@ -198,13 +181,13 @@ const salesWithProductMixPage: AgPageState<ReportBuilderRegistry> = {
     },
 };
 
-const REPORT_BUILDER_PAGES: Record<string, AgPageState<ReportBuilderRegistry>> = {
+const REPORT_BUILDER_PAGES: Record<string, AgPageState> = {
     [executiveOverviewPage.id]: executiveOverviewPage,
     [salesWithProductMixPage.id]: salesWithProductMixPage,
     [labelledFulfilmentPage.id]: labelledFulfilmentPage,
 };
 
-export const reportBuilderState: AgReportState<ReportBuilderRegistry> = {
+export const reportBuilderState: AgReportState = {
     ...mainDemoState,
     pages: mainDemoState.pages.map((page) => REPORT_BUILDER_PAGES[page.id] ?? page),
 };

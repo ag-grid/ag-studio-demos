@@ -14,6 +14,13 @@ import { CHECK_PATH, CHEVRON_DOWN_PATH } from './icons';
 @Component({
     selector: 'app-profile-switcher',
     standalone: true,
+    // The host is a pass-through, so the switcher is a flex child of the sidebar and its
+    // `margin-top: auto` pins it to the bottom.
+    styles: `
+        :host {
+            display: contents;
+        }
+    `,
     template: `
         <div class="agd-rb-profile-switcher">
             <button

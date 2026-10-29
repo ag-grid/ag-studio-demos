@@ -12,6 +12,13 @@ import { ReportItemComponent } from './report-item.component';
     selector: 'app-reports-sidebar',
     standalone: true,
     imports: [ProfileSwitcherComponent, ReportItemComponent],
+    // The host is a pass-through, so `<aside>` is the flex child the stylesheet expects and
+    // stretches to the full height of the shell - as it does in the React and Vue variants.
+    styles: `
+        :host {
+            display: contents;
+        }
+    `,
     template: `
         <aside class="agd-rb-sidebar">
             <div class="agd-rb-brand">

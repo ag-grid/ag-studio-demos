@@ -183,6 +183,10 @@ export const longevityData: AgDataSourcesDefinition<AppRegistry> = {
                     id: 'yearsGainedOrLost',
                     name: 'Years Gained or Lost',
                     format: 'decimalFormat',
+                    // Half-years are real (-1.5, 3.5) but most figures are whole, and the default
+                    // decimal pattern renders every one of them as 15.00. Trailing zeros are
+                    // trimmed instead, in the KPI tiles, the chart axes and the grid alike.
+                    formatOptions: { format: '#,##0.##' },
                     description:
                         'Average change in life expectancy, in years. Negative means years lost. Where the study gave a range or no figure, this is the dataset author\\'s estimate; Years (as published) has the original.',
                 },

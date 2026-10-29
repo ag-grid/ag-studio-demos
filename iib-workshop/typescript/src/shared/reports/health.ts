@@ -204,16 +204,22 @@ const widgets = {
     },
 };
 
+/** Years run in halves, so the decimal default's two fixed places render 15 as 15.00. */
+const PATTERNS: Partial<Record<CalculationId, string>> = {
+    yearsGained: '#,##0.##',
+    yearsLost: '#,##0.##',
+    effectSize: '#,##0.##',
+};
+
 /** The page's calculations, as the report's `schema` in `index.ts` carries them. */
 export const healthSchema: AgSchemaState = {
-    // No `format` here: a field state's `format` holds the format's options, and a format
-    // type name placed there is applied as a pattern, garbling every value. The type goes
-    // in `expressions` below.
+    // A field state's `format` is the pattern, not a format type name: a type name here is
+    // applied as a pattern and garbles every value. The type goes in `expressions` below.
     fields: Object.fromEntries(
-        Object.entries(CALCULATIONS).map(([id, { name, description, expression }]) => [
-            id,
-            { name, description, expression },
-        ])
+        (Object.keys(CALCULATIONS) as CalculationId[]).map((id) => {
+            const { name, description, expression } = CALCULATIONS[id];
+            return [id, { name, description, expression, format: PATTERNS[id] }];
+        })
     ),
     expressions: Object.entries(CALCULATIONS).map(([id, { isMeasure, format }]) => ({
         id,

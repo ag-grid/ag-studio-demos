@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import type { AgStudioApi, AgStudioProperties, AgWidgetsConfig } from 'ag-studio';
-import { AgStudio, createWidgets } from 'ag-studio-vue3';
+import type { AgStudioApi, AgStudioProperties } from 'ag-studio';
+import { AgStudio } from 'ag-studio-vue3';
 
-import type { ReportBuilderRegistry, ReportBuilderStudioOptions } from '../shared';
-import { HEADLINE_KPI_WIDGET, reportBuilderProperties } from '../shared';
-
-import HeadlineKpi from './HeadlineKpi.vue';
+import type { ReportBuilderStudioOptions } from '../shared';
+import { reportBuilderProperties } from '../shared';
 
 /**
  * Renders Studio through `ag-studio-vue3` - the integration a Vue application actually writes.
@@ -18,14 +16,8 @@ import HeadlineKpi from './HeadlineKpi.vue';
 const props = defineProps<{ options: ReportBuilderStudioOptions }>();
 const emit = defineEmits<{ ready: [api?: AgStudioApi] }>();
 
-const widgets = (widgetConfig: AgWidgetsConfig<ReportBuilderRegistry>) =>
-    createWidgets<ReportBuilderRegistry>({
-        additionalTypes: [{ ...HEADLINE_KPI_WIDGET, comp: HeadlineKpi }],
-        menu: [{ label: 'Custom', widgetIds: ['headlineKpi'] }, ...widgetConfig.menu],
-    });
-
-const studioProperties: AgStudioProperties<ReportBuilderRegistry> = {
-    ...reportBuilderProperties(widgets, props.options),
+const studioProperties: AgStudioProperties = {
+    ...reportBuilderProperties(props.options),
     onApiReady: ({ api }) => emit('ready', api),
     onStudioPreDestroyed: () => emit('ready', undefined),
 };
