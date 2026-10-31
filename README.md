@@ -76,7 +76,7 @@ Each project needs an AG Studio licence key to run without a watermark. See
 ## This is the dev branch
 
 These starters track AG Studio `latest`, which means the newest nightly on AG Grid's
-registry - `3.0.0-beta.20261030.913` at the time this was published, and whatever is newest when you
+registry - `3.0.0-beta.20261031.200` at the time this was published, and whatever is newest when you
 install. They use APIs the released version does not have, so they do **not** build against
 it. The default branch carries starters that do.
 
