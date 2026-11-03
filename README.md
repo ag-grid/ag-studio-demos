@@ -40,23 +40,12 @@ expression.
 
 AG Studio widgets embedded in someone else's document - a peer-group research page - styled to
 match it, with the host application owning the data and the surrounding chrome. Right-click a
-company to drill through to a full Studio report on it, opened in a popup.
+company to drill through to a full Studio report on it, opened in a popup as a print-ready A4 page.
 
-- [`in-app-reporting/typescript`](./in-app-reporting/typescript)
-- [`in-app-reporting/react`](./in-app-reporting/react)
-- [`in-app-reporting/vue3`](./in-app-reporting/vue3)
-- [`in-app-reporting/angular`](./in-app-reporting/angular)
-
-### Real-time Dashboard
-
-A monitoring dashboard on live data, which stays filterable while it updates. A simulated fleet of
-services stands in for a monitoring backend, and its readings are applied to Studio's data engine
-as transactions, so the charts and grids move without the dashboard being rebuilt.
-
-- [`service-health/typescript`](./service-health/typescript)
-- [`service-health/react`](./service-health/react)
-- [`service-health/vue3`](./service-health/vue3)
-- [`service-health/angular`](./service-health/angular)
+- [`embedded-analytics/typescript`](./embedded-analytics/typescript)
+- [`embedded-analytics/react`](./embedded-analytics/react)
+- [`embedded-analytics/vue3`](./embedded-analytics/vue3)
+- [`embedded-analytics/angular`](./embedded-analytics/angular)
 
 ### IIB Workshop
 
@@ -80,9 +69,6 @@ src/
 `src/shared` is identical in every framework variant of a demo. Everything above it is idiomatic
 code for that framework, and is where to look first. Each project has its own README describing
 its layout in full.
-
-Real-time Dashboard sits in `service-health/`, which names the dataset it runs on rather than the
-demo. Every other demo's directory matches its name.
 
 Each project needs an AG Studio licence key to run without a watermark. See
 [Licensing](https://www.ag-grid.com/studio/licensing/).

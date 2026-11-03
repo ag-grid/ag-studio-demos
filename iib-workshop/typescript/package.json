@@ -1,6 +1,6 @@
 {
   "name": "iib-workshop-typescript",
-  "version": "3.1.0",
+  "version": "3.0.0",
   "description": "AG Studio x Information is Beautiful workshop starter - TypeScript",
   "license": "MIT",
   "private": true,
@@ -14,7 +14,7 @@
     "data:longevity": "node scripts/build-longevity-source.mjs"
   },
   "dependencies": {
-    "ag-charts-enterprise": "14.3.0-beta.20261103",
+    "ag-charts-enterprise": "14.2.0-beta.20261030.1414",
     "ag-studio": "latest",
     "qrcode-generator": "^1.4.4"
   },
