@@ -15,7 +15,7 @@ const SINCE_2024: AgFilterState = {
     model: { operator: 'greaterThanOrEqual', value: 2024 },
 };
 
-function kpiWithTrend(title: string, valueId: string): AgValueWidget {
+function kpiWithTrend(valueId: string): AgValueWidget {
     return {
         type: 'value',
         dataMapping: {
@@ -23,8 +23,7 @@ function kpiWithTrend(title: string, valueId: string): AgValueWidget {
             sparklineX: [{ id: 'calendar::month' }],
         },
         format: {
-            title: { enabled: true, text: title },
-            style: { sparkline: { lineWidth: 2 } },
+            style: { label: { enabled: true }, sparkline: { lineWidth: 2 } },
         },
     };
 }
@@ -42,15 +41,15 @@ export const executiveOverviewPage: AgPageState = {
                     text: 'Executive Overview',
                     textAlign: 'left',
                     verticalAlign: 'center',
-                    typography: { fontSize: 22, fontWeight: 'normal' },
+                    typography: { fontSize: 22, fontWeight: 'bold' },
                 },
             },
         },
 
-        'kpi-net-sales': kpiWithTrend('Net Sales', 'net_sales'),
-        'kpi-gross-margin': kpiWithTrend('Gross Margin', 'gross_margin_percentage'),
-        'kpi-order-count': kpiWithTrend('Orders', 'order_count'),
-        'kpi-on-time-rate': kpiWithTrend('On-time Delivery', 'on_time_rate'),
+        'kpi-net-sales': kpiWithTrend('net_sales'),
+        'kpi-gross-margin': kpiWithTrend('gross_margin_percentage'),
+        'kpi-order-count': kpiWithTrend('order_count'),
+        'kpi-on-time-rate': kpiWithTrend('on_time_rate'),
 
         'net-sales-by-month': {
             type: 'combo-chart-grouped-column-line',

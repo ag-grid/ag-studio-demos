@@ -18,21 +18,16 @@ import type { ServiceHealthRegistry } from './heatmapWidget';
 const homePage: AgPageState<ServiceHealthRegistry> = {
     id: 'home',
     widgets: {
-        // Headline numbers, each with its trend over the window.
-        'kpi-requests': {
-            type: 'value',
-            dataMapping: { value: [{ id: 'requestsPerSecond' }], sparklineX: [{ id: 'traffic.second::second' }] },
-            format: { title: { enabled: true, text: 'Requests / s' } },
-        },
-        'kpi-error-rate': {
-            type: 'value',
-            dataMapping: { value: [{ id: 'errorRate' }], sparklineX: [{ id: 'traffic.second::second' }] },
-            format: { title: { enabled: true, text: 'Error Rate' } },
-        },
-        'kpi-latency': {
-            type: 'value',
-            dataMapping: { value: [{ id: 'latencyP95' }], sparklineX: [{ id: 'traffic.second::second' }] },
-            format: { title: { enabled: true, text: 'p95 Latency (ms)' } },
+        // Headline numbers over the window, side by side in one widget.
+        'kpi-headline': {
+            type: 'multi-kpi',
+            dataMapping: {
+                values: [{ id: 'requestsPerSecond' }, { id: 'errorRate' }, { id: 'latencyP95' }],
+            },
+            format: {
+                title: { enabled: true, text: 'Headline Metrics' },
+                style: { columns: 3 },
+            },
         },
         'gauge-error-budget': {
             type: 'radial-gauge',
@@ -184,10 +179,8 @@ const homePage: AgPageState<ServiceHealthRegistry> = {
         'filter-window': { xTrack: 0, yTrack: 20, xSpan: 5, ySpan: 13 },
         'filter-service': { xTrack: 0, yTrack: 33, xSpan: 5, ySpan: 14 },
 
-        'kpi-requests': { xTrack: 5, yTrack: 0, xSpan: 6, ySpan: 12 },
-        'kpi-error-rate': { xTrack: 11, yTrack: 0, xSpan: 6, ySpan: 12 },
-        'kpi-latency': { xTrack: 17, yTrack: 0, xSpan: 7, ySpan: 12 },
-        'chart-error-heatmap': { xTrack: 5, yTrack: 12, xSpan: 19, ySpan: 35 },
+        'kpi-headline': { xTrack: 5, yTrack: 0, xSpan: 19, ySpan: 9 },
+        'chart-error-heatmap': { xTrack: 5, yTrack: 9, xSpan: 19, ySpan: 38 },
 
         'chart-errors': { xTrack: 0, yTrack: 47, xSpan: 12, ySpan: 20 },
         'chart-requests': { xTrack: 12, yTrack: 47, xSpan: 12, ySpan: 20 },

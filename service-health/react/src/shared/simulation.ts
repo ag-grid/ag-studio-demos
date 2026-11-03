@@ -7,7 +7,9 @@ import seedrandom from 'seedrandom';
  * Every service runs in every region and environment, and each of those series drifts around its
  * own baseline: each value takes a small random step and is pulled back towards normal, so it
  * wanders plausibly rather than jumping. Every few minutes an incident raises latency and errors
- * for one service in one production region, then fades.
+ * for one service in one production region, then fades. Every minute or two a surge raises traffic
+ * across the whole fleet, with latency and errors rising a little under the extra load, so the
+ * fleet-wide headline numbers move as well as the per-service ones.
  *
  * The simulation keeps the tables the dashboard reads:
  *
@@ -286,6 +288,13 @@ interface IncidentEffect {
 
 const NO_INCIDENT: IncidentEffect = { traffic: 1, latency: 1, errors: 1, cpu: 0 };
 
+interface Surge {
+    startMs: number;
+    durationMs: number;
+    /** The traffic multiplier at the surge's height. */
+    peak: number;
+}
+
 interface Incident {
     service: ServiceProfile;
     region: string;
@@ -346,6 +355,10 @@ export class ServiceHealthSimulation {
     private clock: number;
     private incident?: Incident;
     private nextIncidentMs: number;
+    /** Draws the surges apart from `rng`, so adding them left every other value where it was. */
+    private readonly surgeRng: Rng = seedrandom(`${SEED}-surge`);
+    private surge?: Surge;
+    private nextSurgeMs: number;
     private releases = 40;
 
     constructor(now = Date.now()) {
@@ -359,6 +372,7 @@ export class ServiceHealthSimulation {
 
         this.clock = Math.floor((now - HISTORY_MS) / SECOND_MS) * SECOND_MS;
         this.nextIncidentMs = this.clock + this.between(1, 3) * MINUTE_MS;
+        this.nextSurgeMs = this.clock + this.between(0.5, 2, this.surgeRng) * MINUTE_MS;
 
         // Fill the history the same way live updates are made.
         this.advanceTo(now);
@@ -410,11 +424,12 @@ export class ServiceHealthSimulation {
         const minutes = SECOND_MS / MINUTE_MS;
 
         this.updateIncident(events);
+        this.updateSurge();
 
         for (const s of series) {
             s.step(rng, minutes);
 
-            const effect = this.incidentEffect(s);
+            const effect = this.effectOn(s);
             if (traffic != null) {
                 const row = s.toTrafficRow(rng, clock, s.read(effect));
                 traffic.put(row, true);
@@ -484,6 +499,60 @@ export class ServiceHealthSimulation {
         }
     }
 
+    private updateSurge(): void {
+        const { clock, surge, surgeRng } = this;
+
+        if (surge == null) {
+            if (clock >= this.nextSurgeMs) {
+                this.surge = {
+                    startMs: clock,
+                    durationMs: this.between(0.75, 2, surgeRng) * MINUTE_MS,
+                    peak: this.between(1.4, 2, surgeRng),
+                };
+            }
+            return;
+        }
+
+        if (clock - surge.startMs >= surge.durationMs) {
+            this.surge = undefined;
+            this.nextSurgeMs = clock + this.between(1, 3, surgeRng) * MINUTE_MS;
+        }
+    }
+
+    /** The incident's effect on a series combined with the surge's, which reaches every series. */
+    private effectOn(s: Series): IncidentEffect {
+        const incident = this.incidentEffect(s);
+        const surge = this.surgeEffect();
+        return {
+            traffic: incident.traffic * surge.traffic,
+            latency: incident.latency * surge.latency,
+            errors: incident.errors * surge.errors,
+            cpu: incident.cpu + surge.cpu,
+        };
+    }
+
+    /**
+     * How much the current surge affects every series. Latency and errors rise by less than traffic,
+     * so a surge alone keeps the fleet inside its SLO and the status table stays mostly healthy.
+     */
+    private surgeEffect(): IncidentEffect {
+        const { surge, clock } = this;
+        if (surge == null) {
+            return NO_INCIDENT;
+        }
+
+        // Ramps up over the first third, holds, then fades over the last third.
+        const progress = (clock - surge.startMs) / surge.durationMs;
+        const intensity = Math.max(0, Math.min(1, progress / 0.3, (1 - progress) / 0.3));
+        const extraLoad = (surge.peak - 1) * intensity;
+        return {
+            traffic: 1 + extraLoad,
+            latency: 1 + 0.3 * extraLoad,
+            errors: 1 + 0.5 * extraLoad,
+            cpu: 0.15 * extraLoad,
+        };
+    }
+
     /** How much the current incident affects a series: none, unless it is the one under it. */
     private incidentEffect(s: Series): IncidentEffect {
         const { incident, clock } = this;
@@ -510,7 +579,7 @@ export class ServiceHealthSimulation {
     private writeStatus(changes: TableChanges<StatusRow>): void {
         const { series, status } = this;
         for (const s of series) {
-            const row = s.toStatusRow(s.read(this.incidentEffect(s)));
+            const row = s.toStatusRow(s.read(this.effectOn(s)));
             changes.put(row, !status.has(row.id));
             status.set(row.id, row);
         }
@@ -559,8 +628,8 @@ export class ServiceHealthSimulation {
     }
 
     /** A random number between `low` and `high`. */
-    private between(low: number, high: number): number {
-        return low + (high - low) * this.rng();
+    private between(low: number, high: number, rng: Rng = this.rng): number {
+        return low + (high - low) * rng();
     }
 }
 
