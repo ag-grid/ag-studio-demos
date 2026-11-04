@@ -1,11 +1,11 @@
-import type { DemoProfile, ReportBuilderStudioOptions } from '@demo/report-builder';
-import { createBlankReport, defaultProfile, demoProfiles, reportBuilderReports } from '@demo/report-builder';
 import type { AgStudioApi } from 'ag-studio';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type { Report } from './components/ReportItem';
 import { ReportsSidebar } from './components/ReportsSidebar';
 import { StudioCanvas } from './components/StudioCanvas';
+import type { DemoProfile, ReportBuilderStudioOptions } from './shared';
+import { createBlankReport, defaultProfile, demoProfiles, reportBuilderReports } from './shared';
 
 export interface ReportBuilderAppProps extends ReportBuilderStudioOptions {
     /**

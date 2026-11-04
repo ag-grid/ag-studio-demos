@@ -1,7 +1,9 @@
-import type { PcwRegistry } from '@demo/widget-library';
-import { createWidgetLibraryStudio, followPanelBreakpoint, widgetLibraryParams } from '@demo/widget-library';
 import type { AgDefaultRegistry, AgStudioApi, AgStudioProperties, AgWidgetsConfig } from 'ag-studio';
 import { createWidgets } from 'ag-studio';
+
+import { BarGauge } from './barGauge';
+import type { PcwRegistry } from './shared';
+import { createWidgetLibraryStudio, followPanelBreakpoint, widgetLibraryParams } from './shared';
 
 export interface WidgetLibraryDemoOptions {
     /** Element the demo renders into. Its canvas is removed again on destroy. */
@@ -39,7 +41,7 @@ export function createWidgetLibraryDemo(options: WidgetLibraryDemoOptions): Widg
     container.appendChild(root);
 
     const widgets = (config: AgWidgetsConfig<AgDefaultRegistry>) => {
-        const catalogue = createWidgets<PcwRegistry>(widgetLibraryParams(config));
+        const catalogue = createWidgets<PcwRegistry>(widgetLibraryParams(config, BarGauge));
         return decorateWidgets ? decorateWidgets(catalogue) : catalogue;
     };
 

@@ -1,8 +1,9 @@
 import { Component, input, output } from '@angular/core';
-import type { ReportBuilderStudioOptions } from '@demo/report-builder';
-import { reportBuilderProperties } from '@demo/report-builder';
 import type { AgStudioApi, AgStudioProperties } from 'ag-studio';
 import { AgStudio } from 'ag-studio-angular';
+
+import type { ReportBuilderStudioOptions } from '../shared';
+import { reportBuilderProperties } from '../shared';
 
 /**
  * Renders Studio through `ag-studio-angular` - the integration an Angular application actually

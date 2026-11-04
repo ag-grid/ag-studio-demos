@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from 'vue';
 
-import type { DemoProfile } from '@demo/report-builder';
+import type { DemoProfile } from '../shared';
 
 import { CHECK_PATH, CHEVRON_DOWN_PATH } from './icons';
 

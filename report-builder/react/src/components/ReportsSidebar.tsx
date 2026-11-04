@@ -1,8 +1,8 @@
-import type { DemoProfile } from '@demo/report-builder';
-import { BRAND } from '@demo/report-builder';
 import type { KeyboardEvent } from 'react';
 import { useRef } from 'react';
 
+import type { DemoProfile } from '../shared';
+import { BRAND } from '../shared';
 import { ProfileSwitcher } from './ProfileSwitcher';
 import type { Report } from './ReportItem';
 import { ReportItem } from './ReportItem';

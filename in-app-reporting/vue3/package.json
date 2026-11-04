@@ -1,0 +1,25 @@
+{
+  "name": "in-app-reporting-vue3",
+  "version": "3.1.0",
+  "description": "AG Studio In-App Reporting demo - Vue 3",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "ag-studio": "3.1.0",
+    "ag-studio-vue3": "3.1.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.6",
+    "@vitejs/plugin-vue": "^5.0.5",
+    "typescript": "~5.8.3",
+    "vite": "~5.4.19",
+    "vue-tsc": "^3.3.11"
+  }
+}

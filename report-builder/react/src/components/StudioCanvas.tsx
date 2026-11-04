@@ -1,8 +1,9 @@
-import type { ReportBuilderStudioOptions } from '@demo/report-builder';
-import { reportBuilderProperties } from '@demo/report-builder';
 import type { AgStudioApi, AgStudioProperties } from 'ag-studio';
 import { AgStudio } from 'ag-studio-react';
 import { useMemo } from 'react';
+
+import type { ReportBuilderStudioOptions } from '../shared';
+import { reportBuilderProperties } from '../shared';
 
 interface Props extends ReportBuilderStudioOptions {
     /** Receives the Studio instance once it is ready, and `undefined` when it is torn down. */

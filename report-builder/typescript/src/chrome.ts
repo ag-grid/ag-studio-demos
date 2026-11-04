@@ -1,4 +1,4 @@
-import type { DemoProfile } from '@demo/report-builder';
+import type { DemoProfile } from './shared';
 
 /** Every element the demo's behaviour needs to reach, resolved once at build time. */
 export interface ReportBuilderChrome {

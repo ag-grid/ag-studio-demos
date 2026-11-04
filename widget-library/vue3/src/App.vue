@@ -3,8 +3,10 @@ import type { AgDefaultRegistry, AgStudioApi, AgStudioProperties, AgWidgetsConfi
 import { AgStudio, createWidgets } from 'ag-studio-vue3';
 import { onBeforeUnmount } from 'vue';
 
-import type { PcwRegistry } from '@demo/widget-library';
-import { followPanelBreakpoint, widgetLibraryParams, widgetLibraryProperties } from '@demo/widget-library';
+import type { PcwRegistry } from './shared';
+import { followPanelBreakpoint, widgetLibraryParams, widgetLibraryProperties } from './shared';
+
+import BarGauge from './BarGauge.vue';
 
 /**
  * The Widget Library demo: a ready-made dashboard composed from a curated catalogue, in which an
@@ -20,7 +22,7 @@ import { followPanelBreakpoint, widgetLibraryParams, widgetLibraryProperties } f
 let stopFollowingBreakpoint: (() => void) | undefined;
 
 const widgets = (config: AgWidgetsConfig<AgDefaultRegistry>) =>
-    createWidgets<PcwRegistry>(widgetLibraryParams(config));
+    createWidgets<PcwRegistry>(widgetLibraryParams(config, BarGauge));
 
 const studioProperties: AgStudioProperties<PcwRegistry> = {
     ...widgetLibraryProperties({ widgets }),

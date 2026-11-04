@@ -2,8 +2,8 @@
 import type { AgStudioApi } from 'ag-studio';
 import { computed, ref, watch } from 'vue';
 
-import type { DemoProfile, ReportBuilderStudioOptions } from '@demo/report-builder';
-import { createBlankReport, defaultProfile, demoProfiles, reportBuilderReports } from '@demo/report-builder';
+import type { DemoProfile, ReportBuilderStudioOptions } from './shared';
+import { createBlankReport, defaultProfile, demoProfiles, reportBuilderReports } from './shared';
 
 import type { Report } from './components/ReportItem.vue';
 import ReportsSidebar from './components/ReportsSidebar.vue';

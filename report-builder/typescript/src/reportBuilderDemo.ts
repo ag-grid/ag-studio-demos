@@ -1,4 +1,8 @@
-import type { DemoProfile, ReportBuilderStudioOptions } from '@demo/report-builder';
+import type { AgStudioApi } from 'ag-studio';
+
+import type { ReportBuilderChrome } from './chrome';
+import { createChrome, createReportButton, reportLabel, setReportName } from './chrome';
+import type { DemoProfile, ReportBuilderStudioOptions } from './shared';
 import {
     BRAND,
     createBlankReport,
@@ -6,11 +10,7 @@ import {
     defaultProfile,
     demoProfiles,
     reportBuilderReports,
-} from '@demo/report-builder';
-import type { AgStudioApi } from 'ag-studio';
-
-import type { ReportBuilderChrome } from './chrome';
-import { createChrome, createReportButton, reportLabel, setReportName } from './chrome';
+} from './shared';
 
 export interface ReportBuilderDemoOptions extends ReportBuilderStudioOptions {
     /**

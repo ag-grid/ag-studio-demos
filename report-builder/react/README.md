@@ -21,12 +21,14 @@ src/
     ProfileSwitcher.tsx    the account menu, arrow keys and Escape
     StudioCanvas.tsx       mounts Studio and hands its API back to the app
     icons.tsx              inline SVGs, so the starter needs no icon library
-  demo/                    the framework-agnostic parts, shared with the other variants
+  shared/                  the framework-agnostic parts, shared with the other variants
     data/                  the generated AcmeSaaS retail dataset and the report state over it
-    report-builder/        the demo personas, the Studio wiring, and the chrome's stylesheet
+    profiles.ts            the read-only and editing personas
+    studioSetup.ts         the Studio wiring every variant opens on
+    styles.css             the chrome's stylesheet
 ```
 
-`demo/` is identical across every framework variant of this demo. Everything above it is this
+`shared/` is identical across every framework variant of this demo. Everything above it is this
 variant's own code, and is the part worth reading first.
 
 ## How React and Studio divide the work
@@ -41,7 +43,7 @@ re-rendering a dashboard on every widget drag, which is why this demo does not.
 
 ## Using your own data
 
-`demo/data` generates a six-table retail dataset so the demo runs with no backend. To point it at
-yours, replace the `data` argument in `demo/report-builder/studioSetup.ts` with your own
-`AgDataSourcesDefinition`; the report state in `demo/data/mainDemoState.ts` refers to fields by
+`shared/data` generates a six-table retail dataset so the demo runs with no backend. To point it at
+yours, replace the `data` argument in `shared/studioSetup.ts` with your own
+`AgDataSourcesDefinition`; the report state in `shared/data/mainDemoState.ts` refers to fields by
 name, so it needs updating to match.

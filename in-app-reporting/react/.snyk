@@ -1,0 +1,95 @@
+# Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
+version: v1.25.1
+
+ignore:
+    SNYK-JS-PICOMATCH-21248802:
+        - 'vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > tinyglobby@0.2.16 > picomatch@4.0.4':
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-10-23T10:11:14.000Z
+    SNYK-JS-UNDICI-21181005:
+        - 'vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > undici@8.11.2':
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-10-23T10:11:14.000Z
+    SNYK-JS-UNDICI-21181009:
+        - 'vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > undici@8.11.2':
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-10-23T10:11:14.000Z
+    SNYK-JS-UNDICI-21181011:
+        - 'vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > undici@8.11.2':
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-10-23T10:11:14.000Z
+    SNYK-JS-UNDICI-21181013:
+        - 'vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > undici@8.11.2':
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-10-23T10:11:14.000Z
+    SNYK-JS-UNDICI-21181015:
+        - 'vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > undici@8.11.2':
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-10-23T10:11:14.000Z
+    SNYK-JS-UNDICI-21181017:
+        - 'vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > undici@8.11.2':
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-10-23T10:11:14.000Z
+    SNYK-JS-UNDICI-21181019:
+        - 'vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > undici@8.11.2':
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-10-23T10:11:14.000Z
+    SNYK-JS-UNDICI-21185768:
+        - 'vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > undici@8.11.2':
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-10-23T10:11:14.000Z
+    SNYK-JS-VITE-21282024:
+        - 'vite@5.4.20':
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-10-23T10:11:14.000Z
+    SNYK-JS-VITE-17353904:
+        - vite@5.4.20:
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: 2027-03-02T00:00:00.000Z
+              created: 2026-10-12T11:29:13.528Z
+    SNYK-JS-TAR-17909152:
+        - vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > tar@7.5.15:
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: 2027-03-02T00:00:00.000Z
+              created: 2026-10-12T11:29:13.527Z
+    SNYK-JS-TAR-17909068:
+        - vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > tar@7.5.15:
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: 2027-03-02T00:00:00.000Z
+              created: 2026-10-12T11:29:13.525Z
+    SNYK-JS-ROLLUP-15340920:
+        - vite@5.4.20 > rollup@4.52.4:
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: 2027-03-02T00:00:00.000Z
+              created: 2026-10-12T11:29:13.524Z
+    SNYK-JS-ESBUILD-17750822:
+        - vite@5.4.20 > esbuild@0.21.5:
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: 2027-03-02T00:00:00.000Z
+              created: 2026-10-12T11:29:13.524Z
+patch: {}

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 
-import type { DemoProfile } from '@demo/report-builder';
-import { BRAND } from '@demo/report-builder';
+import type { DemoProfile } from '../shared';
+import { BRAND } from '../shared';
 
 import { PLUS_ICON_PATH } from './icons';
 import ProfileSwitcher from './ProfileSwitcher.vue';

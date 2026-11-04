@@ -1,9 +1,11 @@
 import type { OnDestroy } from '@angular/core';
 import { Component } from '@angular/core';
-import type { PcwRegistry } from '@demo/widget-library';
-import { followPanelBreakpoint, widgetLibraryParams, widgetLibraryProperties } from '@demo/widget-library';
 import type { AgDefaultRegistry, AgStudioApi, AgStudioProperties, AgWidgetsConfig } from 'ag-studio';
 import { AgStudio, createWidgets } from 'ag-studio-angular';
+
+import { BarGaugeComponent } from './bar-gauge.component';
+import type { PcwRegistry } from './shared';
+import { followPanelBreakpoint, widgetLibraryParams, widgetLibraryProperties } from './shared';
 
 /**
  * The Widget Library demo: a ready-made dashboard composed from a curated catalogue, in which an
@@ -32,7 +34,7 @@ export class AppComponent implements OnDestroy {
     protected readonly studioProperties: AgStudioProperties<PcwRegistry> = {
         ...widgetLibraryProperties({
             widgets: (config: AgWidgetsConfig<AgDefaultRegistry>) =>
-                createWidgets<PcwRegistry>(widgetLibraryParams(config)),
+                createWidgets<PcwRegistry>(widgetLibraryParams(config, BarGaugeComponent)),
         }),
         onApiReady: ({ api }) => {
             this.stopFollowingBreakpoint = followPanelBreakpoint(api as AgStudioApi<PcwRegistry>);

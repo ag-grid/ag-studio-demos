@@ -2,8 +2,8 @@
 import type { AgStudioApi, AgStudioProperties } from 'ag-studio';
 import { AgStudio } from 'ag-studio-vue3';
 
-import type { ReportBuilderStudioOptions } from '@demo/report-builder';
-import { reportBuilderProperties } from '@demo/report-builder';
+import type { ReportBuilderStudioOptions } from '../shared';
+import { reportBuilderProperties } from '../shared';
 
 /**
  * Renders Studio through `ag-studio-vue3` - the integration a Vue application actually writes.

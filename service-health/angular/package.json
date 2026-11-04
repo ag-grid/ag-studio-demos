@@ -1,0 +1,32 @@
+{
+  "name": "service-health-angular",
+  "version": "3.1.0",
+  "description": "AG Studio Real-time Dashboard demo - Angular",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "ng serve",
+    "build": "ng build",
+    "preview": "ng serve --configuration production"
+  },
+  "dependencies": {
+    "@angular/common": "^20.0.0",
+    "@angular/compiler": "^20.0.0",
+    "@angular/core": "^20.0.0",
+    "@angular/platform-browser": "^20.0.0",
+    "ag-charts-enterprise": "~14.3.0",
+    "ag-studio": "3.1.0",
+    "ag-studio-angular": "3.1.0",
+    "rxjs": "~7.8.2",
+    "seedrandom": "^3.0.5",
+    "zone.js": "~0.15.1"
+  },
+  "devDependencies": {
+    "@angular/build": "^20.3.26",
+    "@angular/cli": "^20.0.0",
+    "@angular/compiler-cli": "^20.0.0",
+    "@types/seedrandom": "^3.0.8",
+    "typescript": "~5.8.3"
+  }
+}

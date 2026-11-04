@@ -1,8 +1,10 @@
-import type { PcwRegistry } from '@demo/widget-library';
-import { followPanelBreakpoint, widgetLibraryParams, widgetLibraryProperties } from '@demo/widget-library';
 import type { AgDefaultRegistry, AgStudioApi, AgStudioProperties, AgWidgetsConfig } from 'ag-studio';
 import { AgStudio, createWidgets } from 'ag-studio-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
+
+import { BarGauge } from './BarGauge';
+import type { PcwRegistry } from './shared';
+import { followPanelBreakpoint, widgetLibraryParams, widgetLibraryProperties } from './shared';
 
 export interface WidgetLibraryAppProps {
     /** Merged over the demo's own Studio properties, last. For host-side experiments only. */
@@ -35,7 +37,7 @@ export function WidgetLibraryApp({ studioOverrides, decorateWidgets }: WidgetLib
 
     const widgets = useMemo(
         () => (config: AgWidgetsConfig<AgDefaultRegistry>) => {
-            const catalogue = createWidgets<PcwRegistry>(widgetLibraryParams(config));
+            const catalogue = createWidgets<PcwRegistry>(widgetLibraryParams(config, BarGauge));
             return decorateRef.current ? decorateRef.current(catalogue) : catalogue;
         },
         []

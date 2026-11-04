@@ -4,7 +4,7 @@ Runnable demo applications built with [AG Studio](https://www.ag-grid.com/studio
 standalone project: take the folder for the demo and framework you want, and run it.
 
 ```sh
-cd report-builder/react
+cd report-builder/typescript
 npm install
 npm run dev
 ```
@@ -36,16 +36,36 @@ expression.
 - [`widget-library/vue3`](./widget-library/vue3)
 - [`widget-library/angular`](./widget-library/angular)
 
-### Embedded Analytics
+### In-App Reporting
 
-AG Studio widgets embedded in someone else's document - a research tear sheet - styled to match it,
-with the host application owning the data and the surrounding chrome. Each widget can be expanded
-in place for editing.
+AG Studio widgets embedded in someone else's document - a peer-group research page - styled to
+match it, with the host application owning the data and the surrounding chrome. Right-click a
+company to drill through to a full Studio report on it, opened in a popup.
 
-- [`embedded-analytics/typescript`](./embedded-analytics/typescript)
-- [`embedded-analytics/react`](./embedded-analytics/react)
-- [`embedded-analytics/vue3`](./embedded-analytics/vue3)
-- [`embedded-analytics/angular`](./embedded-analytics/angular)
+- [`in-app-reporting/typescript`](./in-app-reporting/typescript)
+- [`in-app-reporting/react`](./in-app-reporting/react)
+- [`in-app-reporting/vue3`](./in-app-reporting/vue3)
+- [`in-app-reporting/angular`](./in-app-reporting/angular)
+
+### Real-time Dashboard
+
+A monitoring dashboard on live data, which stays filterable while it updates. A simulated fleet of
+services stands in for a monitoring backend, and its readings are applied to Studio's data engine
+as transactions, so the charts and grids move without the dashboard being rebuilt.
+
+- [`service-health/typescript`](./service-health/typescript)
+- [`service-health/react`](./service-health/react)
+- [`service-health/vue3`](./service-health/vue3)
+- [`service-health/angular`](./service-health/angular)
+
+### IIB Workshop
+
+The starter for the AG Studio x Information is Beautiful workshop: an AG Studio dashboard over
+Information is Beautiful datasets, with custom widgets and theme presets. TypeScript only, and it also depends on
+`ag-charts-enterprise` and `qrcode-generator`. Its README explains how to run it and regenerate its
+data.
+
+- [`iib-workshop/typescript`](./iib-workshop/typescript)
 
 ## How these are laid out
 
@@ -54,12 +74,15 @@ Every project has the same shape:
 ```
 src/
   <this framework's own code>   the part worth reading
-  demo/                         the framework-agnostic parts
-    <demo>/                     the demo's Studio configuration, dataset and stylesheet
+  shared/                       the demo's Studio configuration, dataset and stylesheet
 ```
 
-`src/demo` is identical in every framework variant of a demo. Everything above it is idiomatic code
-for that framework, and is where to look first.
+`src/shared` is identical in every framework variant of a demo. Everything above it is idiomatic
+code for that framework, and is where to look first. Each project has its own README describing
+its layout in full.
+
+Real-time Dashboard sits in `service-health/`, which names the dataset it runs on rather than the
+demo. Every other demo's directory matches its name.
 
 Each project needs an AG Studio licence key to run without a watermark. See
 [Licensing](https://www.ag-grid.com/studio/licensing/).

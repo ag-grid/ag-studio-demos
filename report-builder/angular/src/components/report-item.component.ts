@@ -17,6 +17,13 @@ export interface Report {
 @Component({
     selector: 'app-report-item',
     standalone: true,
+    // The host is a pass-through, so each item lays out in the reports nav exactly as it does
+    // in the React and Vue variants.
+    styles: `
+        :host {
+            display: contents;
+        }
+    `,
     template: `
         <button
             type="button"

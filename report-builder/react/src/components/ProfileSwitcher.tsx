@@ -1,7 +1,7 @@
-import type { DemoProfile } from '@demo/report-builder';
 import type { KeyboardEvent } from 'react';
 import { useEffect, useRef, useState } from 'react';
 
+import type { DemoProfile } from '../shared';
 import { CheckIcon, ChevronDownIcon } from './icons';
 
 interface Props {

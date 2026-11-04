@@ -16,7 +16,7 @@
                         "browser": "src/main.ts",
                         "polyfills": ["zone.js"],
                         "tsConfig": "tsconfig.json",
-                        "styles": ["src/demo/report-builder/styles.css", "src/index.css"],
+                        "styles": ["src/shared/styles.css", "src/index.css"],
                         "allowedCommonJsDependencies": ["seedrandom"]
                     },
                     "configurations": {

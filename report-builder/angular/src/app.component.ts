@@ -1,11 +1,11 @@
 import { Component, computed, effect, input, output, signal } from '@angular/core';
-import type { DemoProfile, ReportBuilderStudioOptions } from '@demo/report-builder';
-import { createBlankReport, defaultProfile, demoProfiles, reportBuilderReports } from '@demo/report-builder';
 import type { AgStudioApi } from 'ag-studio';
 
 import type { Report } from './components/report-item.component';
 import { ReportsSidebarComponent } from './components/reports-sidebar.component';
 import { StudioCanvasComponent } from './components/studio-canvas.component';
+import type { DemoProfile, ReportBuilderStudioOptions } from './shared';
+import { createBlankReport, defaultProfile, demoProfiles, reportBuilderReports } from './shared';
 
 /**
  * The Report Builder demo: an analyst-facing app shell in which reports are composed from charts,
