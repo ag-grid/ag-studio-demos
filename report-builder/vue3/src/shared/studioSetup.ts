@@ -141,7 +141,8 @@ export function reportBuilderProperties(options: ReportBuilderStudioOptions = {}
         enableStudioDevValidations();
     }
 
-    const data = getMainDemoDataGenerated((seed) => seedrandom(seed));
+    // Generated up to now, so the dashboard always runs to the current date.
+    const data = getMainDemoDataGenerated((seed) => seedrandom(seed), undefined, undefined, new Date());
 
     return {
         data: { ...data, calendars: [mainDemoCalendar] },

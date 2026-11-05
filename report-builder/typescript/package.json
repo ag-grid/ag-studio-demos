@@ -1,6 +1,6 @@
 {
   "name": "report-builder-typescript",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "AG Studio Report Builder demo - TypeScript",
   "license": "MIT",
   "private": true,
@@ -15,7 +15,7 @@
     "seedrandom": "^3.0.5"
   },
   "devDependencies": {
-    "@types/node": "24.13.6",
+    "@types/node": "24.19.2",
     "@types/seedrandom": "^3.0.8",
     "typescript": "~5.8.3",
     "vite": "~5.4.19"

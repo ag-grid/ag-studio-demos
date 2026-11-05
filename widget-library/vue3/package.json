@@ -1,6 +1,6 @@
 {
   "name": "widget-library-vue3",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "AG Studio Widget Library demo - Vue 3",
   "license": "MIT",
   "private": true,
@@ -17,7 +17,7 @@
     "vue": "^3.5.0"
   },
   "devDependencies": {
-    "@types/node": "24.13.6",
+    "@types/node": "24.19.2",
     "@types/seedrandom": "^3.0.8",
     "@vitejs/plugin-vue": "^5.0.5",
     "typescript": "~5.8.3",

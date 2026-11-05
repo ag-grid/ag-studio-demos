@@ -21,9 +21,7 @@ reports sidebar, rename-in-place and an account switcher offering a read-only an
 persona.
 
 - [`report-builder/typescript`](./report-builder/typescript)
-- [`report-builder/react`](./report-builder/react)
 - [`report-builder/vue3`](./report-builder/vue3)
-- [`report-builder/angular`](./report-builder/angular)
 
 ### Widget Library
 
@@ -32,20 +30,25 @@ drags in widgets that are already bound to the data, so nobody authors a widget 
 expression.
 
 - [`widget-library/typescript`](./widget-library/typescript)
-- [`widget-library/react`](./widget-library/react)
 - [`widget-library/vue3`](./widget-library/vue3)
-- [`widget-library/angular`](./widget-library/angular)
 
 ### In-App Reporting
 
 AG Studio widgets embedded in someone else's document - a peer-group research page - styled to
 match it, with the host application owning the data and the surrounding chrome. Right-click a
-company to drill through to a full Studio report on it, opened in a popup as a print-ready A4 page.
+company to drill through to a full Studio report on it, opened in a popup.
 
-- [`embedded-analytics/typescript`](./embedded-analytics/typescript)
-- [`embedded-analytics/react`](./embedded-analytics/react)
-- [`embedded-analytics/vue3`](./embedded-analytics/vue3)
-- [`embedded-analytics/angular`](./embedded-analytics/angular)
+- [`in-app-reporting/typescript`](./in-app-reporting/typescript)
+- [`in-app-reporting/vue3`](./in-app-reporting/vue3)
+
+### Real-time Dashboard
+
+A monitoring dashboard on live data, which stays filterable while it updates. A simulated fleet of
+services stands in for a monitoring backend, and its readings are applied to Studio's data engine
+as transactions, so the charts and grids move without the dashboard being rebuilt.
+
+- [`service-health/typescript`](./service-health/typescript)
+- [`service-health/vue3`](./service-health/vue3)
 
 ### IIB Workshop
 
@@ -70,13 +73,16 @@ src/
 code for that framework, and is where to look first. Each project has its own README describing
 its layout in full.
 
+Real-time Dashboard sits in `service-health/`, which names the dataset it runs on rather than the
+demo. Every other demo's directory matches its name.
+
 Each project needs an AG Studio licence key to run without a watermark. See
 [Licensing](https://www.ag-grid.com/studio/licensing/).
 
 ## This is the dev branch
 
 These starters track AG Studio `latest`, which means the newest nightly on AG Grid's
-registry - `3.0.0-beta.20261031.200` at the time this was published, and whatever is newest when you
+registry - `3.1.0-beta.20261105.200` at the time this was published, and whatever is newest when you
 install. They use APIs the released version does not have, so they do **not** build against
 it. The default branch carries starters that do.
 

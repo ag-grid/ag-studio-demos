@@ -19,6 +19,7 @@ export const executivePage: AgPageState =
                 format: {
                     style: {
                         text: 'Executive Overview',
+                        typography: { fontWeight: 'bold' },
                     },
                 },
             },
@@ -245,6 +246,7 @@ export const salesPerformancePage: AgPageState =
                 format: {
                     style: {
                         text: 'Sales & Margin Performance',
+                        typography: { fontWeight: 'bold' },
                     },
                 },
             },
@@ -357,6 +359,7 @@ export const fulfilmentPage: AgPageState =
                 format: {
                     style: {
                         text: 'Fulfilment & Delivery Health',
+                        typography: { fontWeight: 'bold' },
                     },
                 },
             },
@@ -535,6 +538,7 @@ export const returnsPage: AgPageState =
                 format: {
                     style: {
                         text: 'Returns & Quality Signals',
+                        typography: { fontWeight: 'bold' },
                     },
                 },
             },

@@ -1,0 +1,21 @@
+{
+  "name": "in-app-reporting-typescript",
+  "version": "3.1.0",
+  "description": "AG Studio In-App Reporting demo - TypeScript",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "ag-studio": "latest"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "typescript": "~5.8.3",
+    "vite": "~5.4.19"
+  }
+}

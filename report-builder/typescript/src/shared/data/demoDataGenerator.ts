@@ -10,7 +10,6 @@
 
 const SEED = '20260122';
 const END_DT = new Date('2026-01-21T23:59:59Z');
-const END_MS = END_DT.getTime();
 
 // Row counts at SF=1 follow TPC-H conventions (SF=1 ≈ 1 GB uncompressed).
 // N_STORES is a fixed dimension and does not scale.
@@ -693,7 +692,7 @@ export interface StoreData {
     store_type: string[];
 }
 
-function genStores(rng: RNG): StoreData {
+function genStores(rng: RNG, endMs: number): StoreData {
     const store_id: string[] = [];
     const store_name: string[] = [];
     const region: string[] = [];
@@ -711,7 +710,7 @@ function genStores(rng: RNG): StoreData {
             store_name.push(`${c} Fulfilment Hub`);
             region.push(r);
             city.push(c);
-            opened_date_ms.push(END_MS - daysMs(randInt(rng, 365, 3650)));
+            opened_date_ms.push(endMs - daysMs(randInt(rng, 365, 3650)));
             store_type.push('Fulfilment');
             ++idx;
         }
@@ -734,7 +733,7 @@ function genStores(rng: RNG): StoreData {
         store_name.push(`${c} ${t}`);
         region.push(r);
         city.push(c);
-        opened_date_ms.push(END_MS - daysMs(randInt(rng, 365, 3650)));
+        opened_date_ms.push(endMs - daysMs(randInt(rng, 365, 3650)));
         store_type.push(t);
         ++idx;
     }
@@ -796,7 +795,7 @@ const SUFFIX_MULT: Record<string, number> = {
     Premium: 1.1,
 };
 
-function genProducts(rng: RNG, n: number): ProductData {
+function genProducts(rng: RNG, n: number, endMs: number): ProductData {
     // Per-table arena: 4 × Float64(n) = 32n bytes
     const arena = new DemoArena(32 * n);
     const product_id: string[] = new Array(n);
@@ -833,7 +832,7 @@ function genProducts(rng: RNG, n: number): ProductData {
         // launch date biased to recent (u² × 36 months)
         const u = rng();
         const daysAgo = Math.floor(u * u * 36 * 30);
-        const launchMs = END_MS - daysMs(daysAgo);
+        const launchMs = endMs - daysMs(daysAgo);
 
         let price = randFloat(rng, pMin, pMax);
 
@@ -967,7 +966,7 @@ const LEGAL_SUFFIXES = ['Ltd', 'GmbH', 'AB', 'Inc', 'LLC', 'PLC', 'SAS', 'BV'] a
 
 // ── Optimisation #7: pre-allocated arrays in genCustomers ──
 
-function genCustomers(rng: RNG, n: number): CustomerData {
+function genCustomers(rng: RNG, n: number, endMs: number): CustomerData {
     // Per-table arena: 1 × Float64(n) = 8n bytes
     const arena = new DemoArena(8 * n);
     const customer_id: string[] = new Array(n);
@@ -985,7 +984,7 @@ function genCustomers(rng: RNG, n: number): CustomerData {
         const seg = pickCumW(rng, SEGMENTS, SEG_CUMW);
 
         const u = rng();
-        const signupMs = END_MS - daysMs(Math.floor(u * u * 2100));
+        const signupMs = endMs - daysMs(Math.floor(u * u * 2100));
 
         const name = `${pick(rng, ADJECTIVES)} ${pick(rng, NOUNS)} ${pick(rng, LEGAL_SUFFIXES)}`;
         const em = makeEmail(rng, name, r);
@@ -1051,7 +1050,7 @@ export interface OrderData {
     promo_code: DictColumn;
 }
 
-function genOrders(rng: RNG, customers: CustomerData, stores: StoreData, n: number): OrderData {
+function genOrders(rng: RNG, customers: CustomerData, stores: StoreData, n: number, endMs: number): OrderData {
     // Per-table arena: 1×Float64(n) + 3×Uint32(n) + 11×Uint8(n) = 31n bytes
     const arena = new DemoArena(31 * n);
     // Status pool: proportions from original Python script (56200/60000, 2200/60000, 600/60000, 1000/60000).
@@ -1097,11 +1096,12 @@ function genOrders(rng: RNG, customers: CustomerData, stores: StoreData, n: numb
         return lo;
     }
 
-    // ~60-month window (Jan 2021 → END_DT) with seasonality and year-growth weights
+    // Monthly window from Jan 2021 to the end date, with seasonality and year-growth weights
     const months: { year: number; month: number }[] = [];
+    const endDt = new Date(endMs);
     {
-        let y = END_DT.getUTCFullYear(),
-            m = END_DT.getUTCMonth() + 1;
+        let y = endDt.getUTCFullYear(),
+            m = endDt.getUTCMonth() + 1;
         const startYear = 2021;
         const startMonth = 1;
         while (y > startYear || (y === startYear && m >= startMonth)) {
@@ -1112,9 +1112,22 @@ function genOrders(rng: RNG, customers: CustomerData, stores: StoreData, n: numb
             }
         }
     }
+
+    // Precompute days-per-month (avoids new Date inside the loop). The end month runs only to the end date.
+    const monthDays = months.map(({ year: y, month: m }) => new Date(y, m, 0).getDate());
+    const endIdx = months.length - 1;
+    const endMonthShare = endDt.getUTCDate() / monthDays[endIdx];
+    monthDays[endIdx] = endDt.getUTCDate();
+    // Only the end date's own day can run past it. An order picked after the end is pulled back within
+    // that day, so it keeps the month and year it was picked for.
+    const endSecondsIntoDay = Math.floor(
+        (endMs - Date.UTC(endDt.getUTCFullYear(), endDt.getUTCMonth(), endDt.getUTCDate())) / 1000
+    );
+
+    // Early hypergrowth, then a steady 10% a year from 2024.
     const yearGrowth: Record<number, number> = { 2021: 0.55, 2022: 0.7, 2023: 0.85 };
-    const monthWeights = months.map(({ year: y, month: m }) => {
-        let w = yearGrowth[y] ?? 1;
+    const monthWeights = months.map(({ year: y, month: m }, i) => {
+        let w = (yearGrowth[y] ?? 0.85 * 1.1 ** (y - 2023)) * (i === endIdx ? endMonthShare : 1);
         if (m === 10 || m === 11 || m === 12) {
             w *= 1.2;
         }
@@ -1139,9 +1152,6 @@ function genOrders(rng: RNG, customers: CustomerData, stores: StoreData, n: numb
             monthCumW[i] = s;
         }
     }
-
-    // Precompute days-per-month (avoids new Date inside the loop)
-    const monthDays = months.map(({ year: y, month: m }) => new Date(y, m, 0).getDate());
 
     // Hour weights: business hours bias
     const hourCumW = new Float64Array(24);
@@ -1248,8 +1258,8 @@ function genOrders(rng: RNG, customers: CustomerData, stores: StoreData, n: numb
         const day = randInt(rng, 1, monthDays[mIdx] + 1);
         const hour = pickCumWIdx(rng, hourCumW);
         let orderMs = Date.UTC(my, mm - 1, day, hour, randInt(rng, 0, 60), randInt(rng, 0, 60));
-        if (orderMs > END_MS) {
-            orderMs = END_MS - randInt(rng, 0, 86_400) * 1000;
+        if (orderMs > endMs) {
+            orderMs = endMs - randInt(rng, 0, endSecondsIntoDay + 1) * 1000;
         }
 
         // Store - write store index directly
@@ -1616,7 +1626,7 @@ const DELAY_THRESH: Record<string, number> = { GBP: 4.5, EUR: 4.5, USD: 5.5 };
 
 // ── Optimisation #7: pre-allocated arrays in genShipments ──
 
-function genShipments(rng: RNG, orders: OrderData, nShipments: number): ShipmentData {
+function genShipments(rng: RNG, orders: OrderData, nShipments: number, endMs: number): ShipmentData {
     // Per-table arena: 2×Float64 + 2×Uint32 + 1×Uint8 = 25×nShipments bytes (upper bound)
     const arena = new DemoArena(25 * nShipments);
 
@@ -1684,7 +1694,7 @@ function genShipments(rng: RNG, orders: OrderData, nShipments: number): Shipment
         // Still in transit, so no delivery timestamp: either the order is open, or the
         // delivery would land past the end of the window. Only Processing orders can be
         // open - Completed and Returned orders have both been delivered.
-        if (delivMs > END_MS || (st === 'Processing' && rng() < 0.55)) {
+        if (delivMs > endMs || (st === 'Processing' && rng() < 0.55)) {
             delivery_datetime[i] = NaN;
             delayed[i] = false;
             continue;
@@ -1730,9 +1740,11 @@ function computeItemCount(nOrders: number): number {
 export function generateDemoData(
     createRng: (seed: string) => () => number = () => () => Math.random(),
     seed = SEED,
-    sf = SCALE_FACTOR
+    sf = SCALE_FACTOR,
+    endDate = END_DT
 ): DemoData {
     const rng = createRng(seed);
+    const endMs = endDate.getTime();
     const nProducts = Math.max(Math.round(N_PRODUCTS * sf), SUBCATS.length);
     const nCustomers = Math.max(Math.round(N_CUSTOMERS * sf), 1);
     const nOrders = Math.max(Math.round(N_ORDERS * sf), 1);
@@ -1745,22 +1757,22 @@ export function generateDemoData(
     tracingStart('gen:data');
 
     tracingStart('gen:data:stores');
-    const stores = genStores(rng);
+    const stores = genStores(rng, endMs);
     tracingEnd('gen:data:stores');
     tracingMeasure('gen:data:stores', { rows: stores.store_id.length });
 
     tracingStart('gen:data:products');
-    const products = genProducts(rng, nProducts);
+    const products = genProducts(rng, nProducts, endMs);
     tracingEnd('gen:data:products');
     tracingMeasure('gen:data:products', { rows: nProducts });
 
     tracingStart('gen:data:customers');
-    const customers = genCustomers(rng, nCustomers);
+    const customers = genCustomers(rng, nCustomers, endMs);
     tracingEnd('gen:data:customers');
     tracingMeasure('gen:data:customers', { rows: nCustomers });
 
     tracingStart('gen:data:orders');
-    const orders = genOrders(rng, customers, stores, nOrders);
+    const orders = genOrders(rng, customers, stores, nOrders, endMs);
     tracingEnd('gen:data:orders');
     tracingMeasure('gen:data:orders', { rows: nOrders });
 
@@ -1770,7 +1782,7 @@ export function generateDemoData(
     tracingMeasure('gen:data:order-items', { rows: order_items.order_item_id.indices.length });
 
     tracingStart('gen:data:shipments');
-    const shipments = genShipments(rng, orders, nShipments);
+    const shipments = genShipments(rng, orders, nShipments, endMs);
     tracingEnd('gen:data:shipments');
     tracingMeasure('gen:data:shipments', { rows: nShipments });
 

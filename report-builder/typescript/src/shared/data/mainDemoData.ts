@@ -1615,13 +1615,14 @@ function colsFromStruct(
 export function getMainDemoDataGenerated(
     createRng?: (seed: string) => () => number,
     seed?: string,
-    sf?: number
+    sf?: number,
+    endDate?: Date
 ): AgDataSourcesDefinition {
     const traceEnabled = ((globalThis as any).agStudioDebug ?? []).includes('traceMarkers');
     const mark = traceEnabled ? (label: string) => performance.mark(`ag:${label}`) : (_label: string) => {};
 
     mark('data-gen-start');
-    const data = generateDemoData(createRng, seed, sf);
+    const data = generateDemoData(createRng, seed, sf, endDate);
     mark('encode-start');
     const encoded = encodeDemoData(data);
     mark('precompute-start');
