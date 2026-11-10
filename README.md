@@ -21,7 +21,9 @@ reports sidebar, rename-in-place and an account switcher offering a read-only an
 persona.
 
 - [`report-builder/typescript`](./report-builder/typescript)
+- [`report-builder/react`](./report-builder/react)
 - [`report-builder/vue3`](./report-builder/vue3)
+- [`report-builder/angular`](./report-builder/angular)
 
 ### Widget Library
 
@@ -30,7 +32,9 @@ drags in widgets that are already bound to the data, so nobody authors a widget 
 expression.
 
 - [`widget-library/typescript`](./widget-library/typescript)
+- [`widget-library/react`](./widget-library/react)
 - [`widget-library/vue3`](./widget-library/vue3)
+- [`widget-library/angular`](./widget-library/angular)
 
 ### In-App Reporting
 
@@ -39,7 +43,9 @@ match it, with the host application owning the data and the surrounding chrome. 
 company to drill through to a full Studio report on it, opened in a popup.
 
 - [`in-app-reporting/typescript`](./in-app-reporting/typescript)
+- [`in-app-reporting/react`](./in-app-reporting/react)
 - [`in-app-reporting/vue3`](./in-app-reporting/vue3)
+- [`in-app-reporting/angular`](./in-app-reporting/angular)
 
 ### Real-time Dashboard
 
@@ -48,7 +54,9 @@ services stands in for a monitoring backend, and its readings are applied to Stu
 as transactions, so the charts and grids move without the dashboard being rebuilt.
 
 - [`service-health/typescript`](./service-health/typescript)
+- [`service-health/react`](./service-health/react)
 - [`service-health/vue3`](./service-health/vue3)
+- [`service-health/angular`](./service-health/angular)
 
 ### IIB Workshop
 
@@ -82,7 +90,7 @@ Each project needs an AG Studio licence key to run without a watermark. See
 ## This is the dev branch
 
 These starters track AG Studio `latest`, which means the newest nightly on AG Grid's
-registry - `3.1.0-beta.20261107.200` at the time this was published, and whatever is newest when you
+registry - `3.1.0-beta.20261110.200` at the time this was published, and whatever is newest when you
 install. They use APIs the released version does not have, so they do **not** build against
 it. The default branch carries starters that do.
 

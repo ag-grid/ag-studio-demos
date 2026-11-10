@@ -332,7 +332,7 @@ class ReportBuilderDemoImpl implements ReportBuilderDemo {
     private wireProfileSwitcher(): void {
         const { profileButton, profileMenu } = this.chrome;
 
-        profileButton.addEventListener('click', () => this.setProfileMenuOpen(profileMenu.hidden));
+        profileButton.addEventListener('click', () => this.setProfileMenuOpen(profileMenu.hidden === true));
 
         profileMenu.querySelectorAll<HTMLButtonElement>('[data-profile-id]').forEach((option) => {
             option.addEventListener('click', () => {
