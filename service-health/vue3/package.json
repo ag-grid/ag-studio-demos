@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "ag-charts-enterprise": "14.3.0-beta.20261108",
+    "ag-charts-enterprise": "14.3.0-beta.20261112",
     "ag-studio": "latest",
     "ag-studio-vue3": "latest",
     "seedrandom": "^3.0.5",

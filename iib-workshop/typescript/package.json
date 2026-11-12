@@ -14,7 +14,7 @@
     "data:longevity": "node scripts/build-longevity-source.mjs"
   },
   "dependencies": {
-    "ag-charts-enterprise": "14.3.0-beta.20261108",
+    "ag-charts-enterprise": "14.3.0-beta.20261112",
     "ag-studio": "latest",
     "qrcode-generator": "^2.0.4"
   },
