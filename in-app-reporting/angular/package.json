@@ -1,6 +1,6 @@
 {
   "name": "in-app-reporting-angular",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "AG Studio In-App Reporting demo - Angular",
   "license": "MIT",
   "private": true,
@@ -15,8 +15,8 @@
     "@angular/compiler": "^20.0.0",
     "@angular/core": "^20.0.0",
     "@angular/platform-browser": "^20.0.0",
-    "ag-studio": "3.1.0",
-    "ag-studio-angular": "3.1.0",
+    "ag-studio": "3.1.1",
+    "ag-studio-angular": "3.1.1",
     "rxjs": "~7.8.2",
     "zone.js": "~0.15.1"
   },

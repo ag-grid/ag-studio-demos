@@ -1,6 +1,6 @@
 {
   "name": "in-app-reporting-typescript",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "AG Studio In-App Reporting demo - TypeScript",
   "license": "MIT",
   "private": true,
@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "ag-studio": "3.1.0"
+    "ag-studio": "3.1.1"
   },
   "devDependencies": {
     "@types/node": "24.13.6",

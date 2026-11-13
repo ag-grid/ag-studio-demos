@@ -1,6 +1,6 @@
 {
   "name": "service-health-react",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "AG Studio Real-time Dashboard demo - React",
   "license": "MIT",
   "private": true,
@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "ag-charts-enterprise": "~14.3.0",
-    "ag-studio": "3.1.0",
-    "ag-studio-react": "3.1.0",
+    "ag-studio": "3.1.1",
+    "ag-studio-react": "3.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "seedrandom": "^3.0.5"

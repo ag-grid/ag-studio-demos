@@ -1,6 +1,6 @@
 {
   "name": "service-health-typescript",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "AG Studio Real-time Dashboard demo - TypeScript",
   "license": "MIT",
   "private": true,
@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "ag-charts-enterprise": "~14.3.0",
-    "ag-studio": "3.1.0",
+    "ag-studio": "3.1.1",
     "seedrandom": "^3.0.5"
   },
   "devDependencies": {

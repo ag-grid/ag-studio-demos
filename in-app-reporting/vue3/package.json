@@ -1,6 +1,6 @@
 {
   "name": "in-app-reporting-vue3",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "AG Studio In-App Reporting demo - Vue 3",
   "license": "MIT",
   "private": true,
@@ -11,8 +11,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "ag-studio": "3.1.0",
-    "ag-studio-vue3": "3.1.0",
+    "ag-studio": "3.1.1",
+    "ag-studio-vue3": "3.1.1",
     "vue": "^3.5.0"
   },
   "devDependencies": {
