@@ -4,7 +4,7 @@ Runnable demo applications built with [AG Studio](https://www.ag-grid.com/studio
 standalone project: take the folder for the demo and framework you want, and run it.
 
 ```sh
-cd report-builder/typescript
+cd report-builder/react
 npm install
 npm run dev
 ```
@@ -13,53 +13,6 @@ The TypeScript, React and Vue projects are built with Vite; the Angular ones wit
 Either way `npm run dev` is the command.
 
 ## Demos
-
-### Report Builder
-
-An analyst-facing app shell in which reports are composed from charts, grids and KPI tiles, with a
-reports sidebar, rename-in-place and an account switcher offering a read-only and an editing
-persona.
-
-- [`report-builder/typescript`](./report-builder/typescript)
-- [`report-builder/vue3`](./report-builder/vue3)
-
-### Widget Library
-
-A ready-made dashboard assembled from a curated catalogue of pre-built widgets. An administrator
-drags in widgets that are already bound to the data, so nobody authors a widget or edits an
-expression.
-
-- [`widget-library/typescript`](./widget-library/typescript)
-- [`widget-library/vue3`](./widget-library/vue3)
-
-### In-App Reporting
-
-AG Studio widgets embedded in someone else's document - a peer-group research page - styled to
-match it, with the host application owning the data and the surrounding chrome. Right-click a
-company to drill through to a full Studio report on it, opened in a popup.
-
-- [`in-app-reporting/typescript`](./in-app-reporting/typescript)
-- [`in-app-reporting/react`](./in-app-reporting/react)
-- [`in-app-reporting/vue3`](./in-app-reporting/vue3)
-- [`in-app-reporting/angular`](./in-app-reporting/angular)
-
-### Real-time Dashboard
-
-A monitoring dashboard on live data, which stays filterable while it updates. A simulated fleet of
-services stands in for a monitoring backend, and its readings are applied to Studio's data engine
-as transactions, so the charts and grids move without the dashboard being rebuilt.
-
-- [`service-health/typescript`](./service-health/typescript)
-- [`service-health/vue3`](./service-health/vue3)
-
-### IIB Workshop
-
-The starter for the AG Studio x Information is Beautiful workshop: an AG Studio dashboard over
-Information is Beautiful datasets, with custom widgets and theme presets. TypeScript only, and it also depends on
-`ag-charts-enterprise` and `qrcode-generator`. Its README explains how to run it and regenerate its
-data.
-
-- [`iib-workshop/typescript`](./iib-workshop/typescript)
 
 ## How these are laid out
 
@@ -84,7 +37,7 @@ Each project needs an AG Studio licence key to run without a watermark. See
 ## This is the dev branch
 
 These starters track AG Studio `latest`, which means the newest nightly on AG Grid's
-registry - `3.1.0-beta.20261112.200` at the time this was published, and whatever is newest when you
+registry - `3.1.0-beta.20261113.200` at the time this was published, and whatever is newest when you
 install. They use APIs the released version does not have, so they do **not** build against
 it. The default branch carries starters that do.
 
