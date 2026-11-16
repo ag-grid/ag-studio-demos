@@ -30,7 +30,6 @@ drags in widgets that are already bound to the data, so nobody authors a widget 
 expression.
 
 - [`widget-library/typescript`](./widget-library/typescript)
-- [`widget-library/vue3`](./widget-library/vue3)
 
 ### In-App Reporting
 
@@ -48,7 +47,6 @@ services stands in for a monitoring backend, and its readings are applied to Stu
 as transactions, so the charts and grids move without the dashboard being rebuilt.
 
 - [`service-health/typescript`](./service-health/typescript)
-- [`service-health/vue3`](./service-health/vue3)
 
 ### IIB Workshop
 

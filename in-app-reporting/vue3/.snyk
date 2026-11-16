@@ -2,6 +2,61 @@
 version: v1.25.1
 
 ignore:
+    SNYK-JS-UNDICI-22392401:
+        - vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > undici@8.11.2:
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-11-16T15:41:58.725Z
+        - ag-studio-vue3@* > *:
+              reason: >-
+                  Local workspace package - its dependencies are scanned and triaged in its own project
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-11-16T15:15:40.936Z
+    SNYK-JS-UNDICI-22370261:
+        - vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > undici@8.11.2:
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-11-16T15:41:18.275Z
+        - ag-studio-vue3@* > *:
+              reason: >-
+                  Local workspace package - its dependencies are scanned and triaged in its own project
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-11-16T15:15:40.933Z
+    SNYK-JS-UNDICI-22291127:
+        - vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > undici@8.11.2:
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-11-16T15:40:38.846Z
+        - ag-studio-vue3@* > *:
+              reason: >-
+                  Local workspace package - its dependencies are scanned and triaged in its own project
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-11-16T15:15:40.932Z
+    SNYK-JS-UNDICI-22291066:
+        - vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > undici@8.11.2:
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-11-16T15:39:57.500Z
+        - ag-studio-vue3@* > *:
+              reason: >-
+                  Local workspace package - its dependencies are scanned and triaged in its own project
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-11-16T15:15:40.930Z
+    SNYK-JS-UNDICI-22290988:
+        - vite@5.4.20 > fsevents@2.3.3 > node-gyp@13.0.2 > undici@8.11.2:
+              reason: >-
+                  Used in build & dev - not included in final production build
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-11-16T15:38:23.053Z
+        - ag-studio-vue3@* > *:
+              reason: >-
+                  Local workspace package - its dependencies are scanned and triaged in its own project
+              expires: '2027-03-02T00:00:00.000Z'
+              created: 2026-11-16T15:15:40.930Z
     SNYK-JS-WS-17344547:
         - ag-studio-vue3@* > *:
               reason: >-
