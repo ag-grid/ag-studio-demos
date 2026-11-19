@@ -15,7 +15,26 @@ const INT = { format: 'integerFormat' } as const;
 
 const trafficFields: AgFieldDefinition[] = [
     { id: 'id', name: 'ID', ...INT, hide: true },
-    { id: 'second', name: 'Time', format: 'dateTimeFormat', formatOptions: { format: 'HH:mm:ss' } },
+    {
+        id: 'second',
+        name: 'Time',
+        format: 'dateTimeFormat',
+        formatOptions: { format: 'HH:mm:ss' },
+        // The datetime defaults plus `second`, which they leave out.
+        supportedBuckets: [
+            'year',
+            'quarter',
+            'month',
+            'week',
+            'day',
+            'hour',
+            'minute',
+            'second',
+            'monthOfYear',
+            'dayOfWeek',
+            'hourOfDay',
+        ],
+    },
     { id: 'environment', name: 'Environment', format: 'textFormat' },
     { id: 'region', name: 'Region', format: 'textFormat' },
     { id: 'service', name: 'Service', format: 'textFormat' },
@@ -149,34 +168,17 @@ const nameField: AgFieldDefinition = { id: 'name', name: 'Name', format: 'textFo
 
 const pad = (n: number) => String(n).padStart(2, '0');
 
+/** The built-in `second` bucket's key decoder, which returns `[year, month, day, hour, minute, second]`. */
+const { decode: decodeSecond } = createBuckets().find(({ id }) => id === 'second') as Required<AgDateBucketDefinition>;
+
 /**
- * Groups a datetime by the second, which the built-in grains stop short of. Each key is the
- * second's epoch time, so keys sort in time order and are evenly spaced.
+ * Labels the built-in `second` bucket as `HH:mm:ss` in local time, as the tables show their times.
+ * A format string would show the UTC time, as Studio extracts the key's components in UTC.
  */
-const secondBucket: AgDateBucketDefinition = {
-    id: 'second',
-    longName: 'Second',
-    shortName: 'sec',
-    grain: 'minute',
-    components: ['year', 'month', 'day', 'hour', 'minute', 'second'],
-    // Studio extracts the components in UTC.
-    encode: ([year, month, day, hour, minute, second]) => Date.UTC(year, month - 1, day, hour, minute, second) / 1000,
-    decode: (key) => {
-        const time = new Date(key * 1000);
-        return [
-            time.getUTCFullYear(),
-            time.getUTCMonth() + 1,
-            time.getUTCDate(),
-            time.getUTCHours(),
-            time.getUTCMinutes(),
-            time.getUTCSeconds(),
-        ];
-    },
-    // Shown in local time, as the tables' own times are. Rounded, as an axis tick can fall between keys.
-    format: () => (key: number) => {
-        const time = new Date(Math.round(key) * 1000);
-        return `${pad(time.getHours())}:${pad(time.getMinutes())}:${pad(time.getSeconds())}`;
-    },
+const formatSecond = () => (key: number) => {
+    const [year, month, day, hour, minute, second] = decodeSecond(key);
+    const time = new Date(Date.UTC(year, month - 1, day, hour, minute, second));
+    return `${pad(time.getHours())}:${pad(time.getMinutes())}:${pad(time.getSeconds())}`;
 };
 
 /**
@@ -251,6 +253,6 @@ export function getServiceHealthData(
             link('status', 'environment', 'environments'),
         ],
         expressions,
-        buckets: createBuckets<ServiceHealthRegistry>({ additionalTypes: [secondBucket] }),
+        buckets: createBuckets<ServiceHealthRegistry>({ overrides: [{ id: 'second', format: formatSecond }] }),
     };
 }

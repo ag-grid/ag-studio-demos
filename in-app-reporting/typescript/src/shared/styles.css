@@ -1,0 +1,507 @@
+/*
+ * In-App Reporting demo: a research note with AG Studio widgets embedded in it, and the company
+ * report a drill-through opens.
+ *
+ * The surrounding document is the host application in this demo, so its appearance belongs here
+ * rather than in a framework variant. Colours are the note's own `--hlvn-*` tokens; the handful
+ * that read a host design system do so through `var(--token, fallback)`, so the note stands alone
+ * and still picks up a host's tokens where one defines them.
+ *
+ * How tall the demo is, and whether it is shown at all on narrow viewports, are the host page's
+ * business - neither is set here.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+
+.agd-ea,
+.agd-ea *,
+.agd-ea *::before,
+.agd-ea *::after {
+    box-sizing: border-box;
+}
+
+.agd-ea {
+    --hlvn-navy: #1b2a4a;
+    --hlvn-bronze: #b08d57;
+    --hlvn-ink: #1c2532;
+    --hlvn-muted: #6b7688;
+    --hlvn-rule: #d8cdbb;
+    --hlvn-paper: #ffffff;
+    --hlvn-up: #1a7f5a;
+    --hlvn-down: #b23b3b;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    /* Contains the demo's own z-indexes, which would otherwise share a stacking context with the host page. */
+    position: relative;
+    z-index: 0;
+    font-family:
+        'IBM Plex Sans',
+        -apple-system,
+        BlinkMacSystemFont,
+        'Segoe UI',
+        sans-serif;
+    color: var(--color-fg-primary, #101828);
+}
+
+/* Overview */
+
+.agd-ea-sheet-scroll {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+    padding: 16px;
+    justify-content: safe center;
+    background: var(--color-bg-secondary, #f9fafb);
+}
+
+.agd-ea-sheet {
+    --color-border-primary: var(--hlvn-rule);
+    --color-border-secondary: var(--hlvn-rule);
+    flex-shrink: 0;
+    align-self: flex-start;
+    color-scheme: light;
+    width: 1123px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    transition: margin-right 0.25s ease-in-out;
+    background: var(--hlvn-paper);
+    color: var(--hlvn-ink);
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
+}
+@media (prefers-reduced-motion: reduce) {
+    .agd-ea-sheet {
+        transition: none;
+    }
+}
+.agd-ea-sheet {
+    --ag-studio-wrapper-border: 0px;
+}
+
+.agd-ea-masthead {
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--hlvn-bronze);
+}
+
+.agd-ea-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--hlvn-bronze);
+}
+
+.agd-ea-title {
+    margin: 6px 0 8px;
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--hlvn-navy);
+}
+
+.agd-ea-lede {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--hlvn-muted);
+}
+
+.agd-ea-kpis {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    margin: 0;
+}
+
+.agd-ea-kpi {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 4px;
+    padding: 0 16px;
+    border-left: 1px solid var(--hlvn-rule);
+}
+.agd-ea-kpi:first-child {
+    padding-left: 0;
+    border-left: none;
+}
+
+.agd-ea-kpi-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--hlvn-muted);
+}
+
+.agd-ea-kpi-value {
+    margin: 0;
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--hlvn-navy);
+    font-variant-numeric: tabular-nums;
+}
+
+.agd-ea-coverage {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 12px;
+    margin: 0;
+    padding: 12px 0;
+    list-style: none;
+    border-top: 1px dotted var(--hlvn-rule);
+    border-bottom: 1px dotted var(--hlvn-rule);
+}
+
+.agd-ea-coverage-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.agd-ea-coverage-logo {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+.agd-ea-coverage-ticker {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--hlvn-navy);
+}
+
+.agd-ea-coverage-name {
+    overflow: hidden;
+    font-size: 11px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: var(--hlvn-muted);
+}
+
+.agd-ea-viewports {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 230px 320px 240px;
+    grid-template-areas:
+        'companies companies'
+        'sharePrice revenue'
+        'marketCap marketCap';
+    gap: 24px;
+}
+
+.agd-ea-viewport {
+    display: flex;
+    min-width: 0;
+    overflow: hidden;
+    background: var(--hlvn-paper);
+}
+.agd-ea-viewport[data-viewport='companies'] {
+    grid-area: companies;
+}
+.agd-ea-viewport[data-viewport='marketCap'] {
+    grid-area: marketCap;
+}
+.agd-ea-viewport[data-viewport='sharePrice'] {
+    grid-area: sharePrice;
+}
+.agd-ea-viewport[data-viewport='revenue'] {
+    grid-area: revenue;
+}
+
+.agd-ea-viewport-mount {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+}
+
+.agd-ea-sheet .ag-studio-layout-widget-title,
+.agd-ea-report .ag-studio-layout-widget-title {
+    border-bottom: 1px solid var(--hlvn-bronze);
+    text-transform: uppercase;
+}
+
+.agd-ea-sheet-footer {
+    padding-top: 12px;
+    border-top: 1px solid var(--hlvn-rule);
+}
+
+.agd-ea-disclaimer {
+    margin: 0;
+    font-size: 10.5px;
+    font-style: italic;
+    color: var(--hlvn-muted);
+}
+
+/* Company report, in the popup a drill-through opens */
+
+.agd-ea-report {
+    /*
+     * The popup inherits the opening viewport's Studio variables, which override the report's own
+     * theme, so the report's sizing is set here instead.
+     */
+    --ag-studio-min-width: 0px;
+    --ag-studio-min-height: 0px;
+    --ag-studio-wrapper-border: 0px;
+    --ag-studio-wrapper-spacing: 0px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden auto;
+    background: var(--hlvn-paper);
+    color: var(--hlvn-ink);
+}
+
+/* A fixed height, which the popup's size in the shared Studio setup allows for exactly. */
+.agd-ea-report-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+    flex-shrink: 0;
+    height: 44px;
+    padding: 0 16px;
+    border-bottom: 1px solid var(--hlvn-rule);
+}
+
+/*
+ * As wide as the popup, so a vertical scrollbar or browser zoom never makes it scroll sideways, and
+ * as tall as A4 landscape at 96 DPI. The masthead and footer heights are what the report state's
+ * page layout leaves room for: 78 + 692 + 24 = 794. Printing pins the full A4 width back.
+ */
+.agd-ea-report-page {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    min-width: 0;
+    height: 794px;
+    background: var(--hlvn-paper);
+}
+
+.agd-ea-report-masthead {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) minmax(0, 220px) auto;
+    align-items: center;
+    gap: 24px;
+    flex-shrink: 0;
+    height: 78px;
+    padding: 0 28px;
+    background: var(--hlvn-navy);
+    color: var(--hlvn-paper);
+    border-bottom: 3px solid var(--hlvn-bronze);
+}
+
+.agd-ea-report-masthead-logo {
+    width: 48px;
+    height: 48px;
+    padding: 6px;
+    background: var(--hlvn-paper);
+    border-radius: 4px;
+}
+
+.agd-ea-report-masthead-identity {
+    min-width: 0;
+}
+
+.agd-ea-report-masthead-name {
+    overflow: hidden;
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 26px;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.agd-ea-report-masthead-tagline {
+    margin-top: 4px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.72);
+}
+
+.agd-ea-report-masthead-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.agd-ea-range-track {
+    position: relative;
+    height: 4px;
+    margin: 10px 0 6px;
+    background: linear-gradient(to right, rgba(255, 255, 255, 0.25), var(--hlvn-bronze));
+    border-radius: 2px;
+}
+
+.agd-ea-range-marker {
+    position: absolute;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    background: var(--hlvn-paper);
+    border: 2px solid var(--hlvn-bronze);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.agd-ea-range-ends {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.agd-ea-report-masthead-price {
+    text-align: right;
+}
+
+.agd-ea-report-masthead-close {
+    font-family: 'IBM Plex Serif', Georgia, serif;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+}
+
+.agd-ea-report-masthead-change {
+    margin: 2px 0 2px;
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+.agd-ea-report-masthead-change[data-direction='up'] {
+    color: #6fd3a5;
+}
+.agd-ea-report-masthead-change[data-direction='down'] {
+    color: #f19a9a;
+}
+
+.agd-ea-report-mount {
+    flex-shrink: 0;
+    min-width: 0;
+    height: 692px;
+}
+
+.agd-ea-report-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    height: 24px;
+    padding: 0 28px;
+    font-size: 10.5px;
+    color: var(--hlvn-muted);
+    border-top: 1px solid var(--hlvn-rule);
+}
+.agd-ea-report-footer > :first-child {
+    font-style: italic;
+}
+
+.agd-ea-report .ag-studio-value-widget:has(.ag-studio-value-widget-label:not(:empty)) {
+    border-bottom: 1px dotted var(--hlvn-bronze);
+}
+
+.agd-ea-report .ag-studio-root-panel-container-right {
+    margin: 0 0 var(--ag-studio-wrapper-spacing);
+}
+
+.agd-ea-button {
+    flex-shrink: 0;
+    padding: 5px 12px;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--hlvn-navy);
+    background: transparent;
+    border: 1px solid var(--hlvn-navy);
+    border-radius: 3px;
+    cursor: pointer;
+    transition:
+        background 0.15s ease-in-out,
+        color 0.15s ease-in-out;
+}
+.agd-ea-button:hover,
+.agd-ea-button-primary {
+    color: var(--hlvn-paper);
+    background: var(--hlvn-navy);
+}
+.agd-ea-button-primary:hover {
+    background: #14203a;
+}
+
+/* Analyst Consensus custom widget */
+
+.analyst-consensus {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 0 8px;
+    font-family: var(--ag-studio-canvas-font-family);
+}
+
+.analyst-consensus-rating {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--hlvn-ink);
+}
+
+.analyst-consensus-rating[data-rating='overweight'] {
+    color: var(--hlvn-up);
+}
+
+.analyst-consensus-rating[data-rating='underweight'] {
+    color: var(--hlvn-down);
+}
+
+.analyst-consensus-count {
+    font-size: 11px;
+    color: var(--hlvn-muted);
+}
+
+/* Print the open company report on its own, with none of the host page around it. */
+
+@page {
+    size: A4 landscape;
+    margin: 0;
+}
+@media print {
+    body *:not(:has([data-print-root])):not([data-print-root], [data-print-root] *) {
+        display: none !important;
+    }
+    :has(> [data-print-root]),
+    :has(> * [data-print-root]) {
+        display: block !important;
+        position: static !important;
+        inset: auto !important;
+        width: auto !important;
+        height: auto !important;
+        min-width: 0 !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: 0 !important;
+        background: none !important;
+        box-shadow: none !important;
+    }
+    [data-print-root] {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+    .agd-ea-report-page {
+        width: 1123px;
+    }
+}

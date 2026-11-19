@@ -548,7 +548,6 @@ export const expressions: AgExpressionFieldDefinition[] = [
         id: 'return_refunds',
         isMeasure: false,
         name: 'Refunds',
-        hide: true,
         format: 'currencyFormat',
         formatOptions: { format: '£#,##0.0,K' },
         expression: {
@@ -562,7 +561,6 @@ export const expressions: AgExpressionFieldDefinition[] = [
         id: 'return_shipping',
         isMeasure: false,
         name: 'Shipping',
-        hide: true,
         format: 'currencyFormat',
         formatOptions: { format: '£#,##0.0,K' },
         expression: {
@@ -576,7 +574,6 @@ export const expressions: AgExpressionFieldDefinition[] = [
         id: 'return_write_offs',
         isMeasure: false,
         name: 'Write-offs',
-        hide: true,
         format: 'currencyFormat',
         formatOptions: { format: '£#,##0.0,K' },
         expression: {

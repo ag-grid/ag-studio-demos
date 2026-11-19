@@ -21,9 +21,7 @@ reports sidebar, rename-in-place and an account switcher offering a read-only an
 persona.
 
 - [`report-builder/typescript`](./report-builder/typescript)
-- [`report-builder/react`](./report-builder/react)
 - [`report-builder/vue3`](./report-builder/vue3)
-- [`report-builder/angular`](./report-builder/angular)
 
 ### Widget Library
 
@@ -35,6 +33,17 @@ expression.
 - [`widget-library/react`](./widget-library/react)
 - [`widget-library/vue3`](./widget-library/vue3)
 - [`widget-library/angular`](./widget-library/angular)
+
+### In-App Reporting
+
+AG Studio widgets embedded in someone else's document - a peer-group research page - styled to
+match it, with the host application owning the data and the surrounding chrome. Right-click a
+company to drill through to a full Studio report on it, opened in a popup.
+
+- [`in-app-reporting/typescript`](./in-app-reporting/typescript)
+- [`in-app-reporting/react`](./in-app-reporting/react)
+- [`in-app-reporting/vue3`](./in-app-reporting/vue3)
+- [`in-app-reporting/angular`](./in-app-reporting/angular)
 
 ### Real-time Dashboard
 
@@ -79,7 +88,7 @@ Each project needs an AG Studio licence key to run without a watermark. See
 ## This is the dev branch
 
 These starters track AG Studio `latest`, which means the newest nightly on AG Grid's
-registry - `3.1.0-beta.20261117.200` at the time this was published, and whatever is newest when you
+registry - `3.1.0-beta.20261119.200` at the time this was published, and whatever is newest when you
 install. They use APIs the released version does not have, so they do **not** build against
 it. The default branch carries starters that do.
 

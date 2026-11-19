@@ -8,7 +8,7 @@ import type { ServiceHealthRegistry } from './heatmapWidget';
  * over time, traffic by region and slow requests, each service's current status, and the event log
  * underneath.
  *
- * Every chart over time groups by the second, through the `second` bucket in `data.ts`.
+ * Every chart over time groups by the built-in `second` bucket, which `data.ts` labels as `HH:mm:ss`.
  *
  * Charts group by the lookup tables' `name` fields rather than the live tables' own columns, so
  * clicking a region or a service cross-filters the event log as well as the traffic.
