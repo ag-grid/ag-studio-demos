@@ -42,6 +42,7 @@ class ReportBuilderDemoImpl implements ReportBuilderDemo {
 
     private readonly chrome: ReportBuilderChrome;
     private readonly onReportSelect?: (reportId: string) => void;
+    private readonly phoneLayout: boolean;
 
     /** Cleanups for listeners outside the chrome's own subtree, which removal alone would leave behind. */
     private readonly teardowns: (() => void)[] = [];
@@ -56,9 +57,10 @@ class ReportBuilderDemoImpl implements ReportBuilderDemo {
 
     constructor(options: ReportBuilderDemoOptions) {
         const { container, onReportSelect, ...studioOptions } = options;
-        const { initialReportId } = studioOptions;
+        const { initialReportId, phoneLayout = false } = studioOptions;
 
         this.onReportSelect = onReportSelect;
+        this.phoneLayout = phoneLayout;
 
         this.chrome = createChrome(container, {
             reports: reportBuilderReports,
@@ -66,6 +68,11 @@ class ReportBuilderDemoImpl implements ReportBuilderDemo {
             defaultProfile,
             brand: BRAND,
         });
+        if (phoneLayout) {
+            this.chrome.root.classList.add('phone-layout');
+            // The phone layout restacks the list as a row, so arrow keys move across it.
+            this.chrome.reportsNav.setAttribute('aria-orientation', 'horizontal');
+        }
 
         this.api = createReportBuilderStudio(this.chrome.canvas, studioOptions);
 
@@ -120,9 +127,37 @@ class ReportBuilderDemoImpl implements ReportBuilderDemo {
             }
         });
 
-        // Keep the active report visible, scoping the scroll to the sidebar list (never the
-        // page) so the demo layout stays put.
-        active?.scrollIntoView({ block: 'nearest' });
+        if (!active) {
+            return;
+        }
+        if (this.phoneLayout) {
+            this.scrollReportIntoRow(active);
+        } else {
+            // Keep the active report visible, scoping the scroll to the sidebar list (never the
+            // page) so the demo layout stays put.
+            active.scrollIntoView({ block: 'nearest' });
+        }
+    }
+
+    /**
+     * Scrolls only the report row. On a phone the demo can sit below the fold, where
+     * `scrollIntoView` would also scroll the page down to it.
+     */
+    private scrollReportIntoRow(item: HTMLElement): void {
+        const { reportsNav } = this.chrome;
+        const row = reportsNav.getBoundingClientRect();
+        const { left, right } = item.getBoundingClientRect();
+        if (left < row.left) {
+            reportsNav.scrollLeft -= row.left - left;
+        } else if (right > row.right) {
+            reportsNav.scrollLeft += right - row.right;
+        }
+    }
+
+    /** Whether the visitor can edit right now. A phone never edits, whatever the profile allows. */
+    private get isEditing(): boolean {
+        const { phoneLayout, currentProfile, currentMode } = this;
+        return !phoneLayout && currentProfile.access === 'write' && currentMode === 'edit';
     }
 
     /**
@@ -153,7 +188,7 @@ class ReportBuilderDemoImpl implements ReportBuilderDemo {
         const id = button.dataset.reportId!;
         button.addEventListener('click', () => this.selectReportFromUser(id));
         button.addEventListener('dblclick', () => {
-            if (this.currentMode === 'edit') {
+            if (this.isEditing) {
                 this.beginRename(button, { isNew: false });
             }
         });
@@ -228,12 +263,14 @@ class ReportBuilderDemoImpl implements ReportBuilderDemo {
     }
 
     /**
-     * Arrow-key navigation for the vertical report list (roving focus, selection follows focus).
+     * Arrow-key navigation for the report list, a column or, in the phone layout, a row (roving
+     * focus, selection follows focus).
      * Home/End jump to the first/last report. The rename input is left alone so its own caret
      * movement still works.
      */
     private wireKeyboardNav(): void {
         const { reportsNav } = this.chrome;
+        const [previousKey, nextKey] = this.phoneLayout ? ['ArrowLeft', 'ArrowRight'] : ['ArrowUp', 'ArrowDown'];
 
         reportsNav.addEventListener('keydown', (event) => {
             if ((event.target as HTMLElement).tagName === 'INPUT') {
@@ -247,8 +284,8 @@ class ReportBuilderDemoImpl implements ReportBuilderDemo {
             const current = items.findIndex((item) => item === document.activeElement);
 
             let next = current;
-            if (event.key === 'ArrowDown') next = (current + 1) % items.length;
-            else if (event.key === 'ArrowUp') next = (current - 1 + items.length) % items.length;
+            if (event.key === nextKey) next = (current + 1) % items.length;
+            else if (event.key === previousKey) next = (current - 1 + items.length) % items.length;
             else if (event.key === 'Home') next = 0;
             else if (event.key === 'End') next = items.length - 1;
             else return;
@@ -282,13 +319,12 @@ class ReportBuilderDemoImpl implements ReportBuilderDemo {
      * host state to CSS, and the New report button and Studio mode follow the signed-in profile.
      */
     private render(): void {
-        const { currentProfile, currentMode, chrome } = this;
-        const isEditing = currentProfile.access === 'write' && currentMode === 'edit';
+        const { currentProfile, chrome, isEditing } = this;
 
         chrome.root.classList.toggle('access-write', currentProfile.access === 'write');
         chrome.root.classList.toggle('access-view', currentProfile.access === 'view');
-        chrome.root.classList.toggle('edit-active', currentMode === 'edit');
-        chrome.root.classList.toggle('view-active', currentMode === 'view');
+        chrome.root.classList.toggle('edit-active', isEditing);
+        chrome.root.classList.toggle('view-active', !isEditing);
 
         this.renderProfileSwitcher();
 

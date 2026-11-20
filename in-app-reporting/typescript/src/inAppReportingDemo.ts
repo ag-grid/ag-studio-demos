@@ -19,6 +19,8 @@ export interface InAppReportingDemoOptions {
     container: HTMLElement;
     /** Merged over the demo's own Studio properties. For host-side experiments only. */
     studioOverrides?: Partial<AgStudioProperties>;
+    /** Lay the page out for a phone-sized screen rather than as the full-width sheet. Off by default. */
+    phoneLayout?: boolean;
 }
 
 export interface InAppReportingDemo {
@@ -40,14 +42,14 @@ export interface InAppReportingDemo {
  * point.
  */
 export function createInAppReportingDemo(options: InAppReportingDemoOptions): InAppReportingDemo {
-    const { container, studioOverrides } = options;
+    const { container, studioOverrides, phoneLayout } = options;
 
     const group = getPeerGroup();
     const view = buildOverviewView(group);
     const dataEngine = createPeerGroupDataEngine(group);
 
     const root = document.createElement('div');
-    root.className = 'agd-ea';
+    root.className = phoneLayout ? 'agd-ea agd-ea-phone' : 'agd-ea';
     container.appendChild(root);
 
     const overview = createOverviewPage(root, view);
@@ -70,7 +72,7 @@ export function createInAppReportingDemo(options: InAppReportingDemoOptions): In
             return;
         }
 
-        popupParams = { filter, group, dataEngine, studioOverrides };
+        popupParams = { filter, group, dataEngine, studioOverrides, phoneLayout };
         // Any viewport can open it: they share the popup parent, so it opens over the whole demo.
         popup = viewports.companies.createPopup<CompanyReportPopupParams>({
             ...companyReportPopupOptions(root),
@@ -90,7 +92,7 @@ export function createInAppReportingDemo(options: InAppReportingDemoOptions): In
     for (const key of VIEWPORT_KEYS) {
         viewports[key] = createStudio(
             overview.mounts[key],
-            viewportProperties(key, dataEngine, root, drillThrough, { studioOverrides })
+            viewportProperties(key, dataEngine, root, drillThrough, { studioOverrides, phoneLayout })
         );
     }
 

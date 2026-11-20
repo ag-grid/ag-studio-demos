@@ -26,6 +26,8 @@ export interface CompanyReportPopupParams {
     group: PeerGroup;
     dataEngine: AgDataEngine;
     studioOverrides?: Partial<AgStudioProperties>;
+    /** Fit the report to a phone-sized screen, view only, without the Edit Mode and Print buttons. */
+    phoneLayout?: boolean;
 }
 
 const widgets = (widgetConfig: AgWidgetsConfig<PeerGroupRegistry>) =>
@@ -96,7 +98,7 @@ export class CompanyReportPopup implements AgTypeScriptComponent<CompanyReportPo
     private studioApi!: AgStudioApi<PeerGroupRegistry>;
 
     init(params: CompanyReportPopupParams): void {
-        const { filter, dataEngine, studioOverrides } = params;
+        const { filter, dataEngine, studioOverrides, phoneLayout } = params;
         const eGui = document.createElement('div');
         eGui.className = 'agd-ea-report';
 
@@ -117,11 +119,12 @@ export class CompanyReportPopup implements AgTypeScriptComponent<CompanyReportPo
         footer.append(el('span', undefined, DISCLAIMER), el('span', undefined, `Figures as of ${formatAsOf()}`));
         page.append(this.eMasthead, mount, footer);
 
-        eGui.append(toolbar, page);
+        // Editing and printing are desktop features, so a phone gets the report view only.
+        eGui.append(...(phoneLayout ? [] : [toolbar]), page);
         this.eGui = eGui;
         this.renderMasthead(params);
         this.studioApi = createStudio<PeerGroupRegistry>(mount, {
-            ...companyReportProperties(dataEngine, filter, { studioOverrides }),
+            ...companyReportProperties(dataEngine, filter, { studioOverrides, phoneLayout }),
             widgets,
         });
     }

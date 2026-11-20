@@ -1,5 +1,5 @@
 import type { AgCreateWidgetsParams, AgStudioProperties, AgStudioThemeParams } from 'ag-studio';
-import { studioTheme } from 'ag-studio';
+import { singleColumnLayout, studioTheme } from 'ag-studio';
 
 import { getServiceHealthData } from './data';
 import type { ServiceHealthRegistry } from './heatmapWidget';
@@ -108,6 +108,24 @@ export interface ServiceHealthStudioOptions {
     simulation: ServiceHealthSimulation;
     /** Merged over the demo's own Studio properties, last. For host-side experiments only. */
     studioOverrides?: Partial<AgStudioProperties<ServiceHealthRegistry>>;
+    /** Lay the demo out for a phone: view mode, no side panels and widgets in a single column. */
+    phoneLayout?: boolean;
+}
+
+// Studio's default page minimum width of 720 would leave the single-column breakpoint unreachable.
+const PHONE_PAGE_MIN_WIDTH = 250;
+const PHONE_MAX_WIDTH = 719;
+
+function phoneProperties(): Partial<AgStudioProperties<ServiceHealthRegistry>> {
+    return {
+        mode: 'view',
+        theme: carbonTheme.withParams({ studioMinHeight: 0 }),
+        layout: { minWidth: PHONE_PAGE_MIN_WIDTH },
+        responsiveLayoutBreakpoints: [
+            { minWidth: PHONE_PAGE_MIN_WIDTH, maxWidth: PHONE_MAX_WIDTH, layout: singleColumnLayout },
+        ],
+        panels: { view: { left: [], right: [] } },
+    };
 }
 
 /**
@@ -119,6 +137,7 @@ export interface ServiceHealthStudioOptions {
 export function serviceHealthProperties({
     simulation,
     studioOverrides,
+    phoneLayout,
 }: ServiceHealthStudioOptions): AgStudioProperties<ServiceHealthRegistry> {
     return {
         data: getServiceHealthData(simulation),
@@ -132,6 +151,7 @@ export function serviceHealthProperties({
         // The heatmap is the only widget outside Studio's own menu groups, so the section that
         // collects such widgets is named for it.
         localeText: { widgetPanelWidgetCategoryUncategorized: 'Custom' },
+        ...(phoneLayout ? phoneProperties() : undefined),
         ...studioOverrides,
     };
 }

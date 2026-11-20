@@ -15,6 +15,8 @@ export interface WidgetLibraryDemoOptions {
      * around the catalogue rather than in place of it.
      */
     decorateWidgets?: (widgets: AgWidgetsConfig<PcwRegistry>) => AgWidgetsConfig<PcwRegistry>;
+    /** Lay the demo out for a phone: view mode, no side panels and widgets in a single column. */
+    phoneLayout?: boolean;
 }
 
 export interface WidgetLibraryDemo {
@@ -30,7 +32,7 @@ export interface WidgetLibraryDemo {
  * difference between this variant and the React one.
  */
 export function createWidgetLibraryDemo(options: WidgetLibraryDemoOptions): WidgetLibraryDemo {
-    const { container, studioOverrides, decorateWidgets } = options;
+    const { container, studioOverrides, decorateWidgets, phoneLayout } = options;
 
     const canvas = document.createElement('div');
     canvas.className = 'agd-wl-canvas';
@@ -45,13 +47,14 @@ export function createWidgetLibraryDemo(options: WidgetLibraryDemoOptions): Widg
         return decorateWidgets ? decorateWidgets(catalogue) : catalogue;
     };
 
-    const api = createWidgetLibraryStudio(canvas, { widgets, studioOverrides });
-    const stopFollowingBreakpoint = followPanelBreakpoint(api);
+    const api = createWidgetLibraryStudio(canvas, { widgets, studioOverrides, phoneLayout });
+    // The phone layout is view mode, which has no widget library panel to open or collapse.
+    const stopFollowingBreakpoint = phoneLayout ? undefined : followPanelBreakpoint(api);
 
     return {
         api,
         destroy: () => {
-            stopFollowingBreakpoint();
+            stopFollowingBreakpoint?.();
             api.destroy();
             root.remove();
         },

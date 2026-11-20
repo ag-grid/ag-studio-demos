@@ -470,6 +470,90 @@
     color: var(--hlvn-muted);
 }
 
+/* Phone layout. Screen only, so printing keeps the A4 sheet. */
+
+@media screen {
+    .agd-ea-phone .agd-ea-sheet-scroll {
+        padding: 8px;
+    }
+
+    .agd-ea-phone .agd-ea-sheet {
+        width: 100%;
+        min-width: 0;
+        padding: 16px;
+        gap: 20px;
+    }
+
+    .agd-ea-phone .agd-ea-title {
+        font-size: 22px;
+    }
+
+    .agd-ea-phone .agd-ea-kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        row-gap: 16px;
+    }
+    .agd-ea-phone .agd-ea-kpi:nth-child(odd) {
+        padding-left: 0;
+        border-left: none;
+    }
+
+    .agd-ea-phone .agd-ea-coverage {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    /* Lets a long company name ellipsize instead of widening its column. */
+    .agd-ea-phone .agd-ea-coverage-item > div {
+        min-width: 0;
+    }
+
+    .agd-ea-phone .agd-ea-viewports {
+        grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: 320px 280px 280px 240px;
+        grid-template-areas:
+            'companies'
+            'sharePrice'
+            'revenue'
+            'marketCap';
+    }
+
+    /* The 52-week range has no room beside the name and price, and the masthead keeps its 78px height. */
+    .agd-ea-phone .agd-ea-report-masthead {
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 12px;
+        padding: 0 12px;
+    }
+    .agd-ea-phone .agd-ea-range {
+        display: none;
+    }
+    .agd-ea-phone .agd-ea-report-masthead-logo {
+        width: 40px;
+        height: 40px;
+    }
+    .agd-ea-phone .agd-ea-report-masthead-name {
+        font-size: 18px;
+    }
+    .agd-ea-phone .agd-ea-report-masthead-tagline,
+    .agd-ea-phone .agd-ea-report-footer > :first-child {
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+    .agd-ea-phone .agd-ea-report-masthead-close {
+        font-size: 20px;
+    }
+
+    .agd-ea-phone .agd-ea-report-footer {
+        gap: 12px;
+        padding: 0 12px;
+    }
+    .agd-ea-phone .agd-ea-report-footer > :first-child {
+        min-width: 0;
+    }
+    .agd-ea-phone .agd-ea-report-footer > :last-child {
+        flex-shrink: 0;
+    }
+}
+
 /* Print the open company report on its own, with none of the host page around it. */
 
 @page {

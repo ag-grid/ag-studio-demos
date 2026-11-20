@@ -470,3 +470,62 @@
 .agd-rb-canvas .ag-studio-root-panel-container-right {
     margin-top: 16px;
 }
+
+/* Phone layout: the sidebar becomes a header whose reports row scrolls sideways, so nothing widens the page. */
+
+.agd-rb.phone-layout .agd-rb-body {
+    flex-direction: column;
+}
+
+.agd-rb.phone-layout .agd-rb-sidebar {
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    min-width: 0;
+    padding: 8px 12px;
+    border-right: none;
+    border-bottom: 1px solid var(--color-border-primary, #d0d5dd);
+}
+
+/* Zero font size rather than removing the wordmark, so it is still announced. */
+.agd-rb.phone-layout .agd-rb-brand {
+    flex-shrink: 0;
+    padding: 0;
+    font-size: 0;
+    line-height: 0;
+}
+
+.agd-rb.phone-layout .agd-rb-brand::before {
+    margin-right: 0;
+}
+
+.agd-rb.phone-layout .agd-rb-sidebar-heading,
+.agd-rb.phone-layout .agd-rb-profile-switcher {
+    display: none;
+}
+
+.agd-rb.phone-layout .agd-rb-reports-nav {
+    flex-direction: row;
+    flex: 1;
+    min-width: 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+}
+
+.agd-rb.phone-layout .agd-rb-report-item {
+    width: auto;
+}
+
+/* The accent bar moves under the selected report, as a tab's would. */
+.agd-rb.phone-layout .agd-rb-report-item.active::before {
+    top: auto;
+    right: 8px;
+    bottom: 0;
+    left: 8px;
+    width: auto;
+    height: 3px;
+}
+
+.agd-rb.phone-layout .agd-rb-canvas .ag-studio-layout {
+    padding-top: 8px;
+}

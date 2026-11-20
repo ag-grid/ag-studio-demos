@@ -1,5 +1,5 @@
 import type { AgStudioApi, AgStudioProperties } from 'ag-studio';
-import { createStudio, studioTheme } from 'ag-studio';
+import { createStudio, singleColumnLayout, studioTheme } from 'ag-studio';
 
 import { getPreconfiguredWidgetsData } from './data';
 import type { PcwRegistry } from './library';
@@ -90,7 +90,13 @@ export interface WidgetLibraryStudioOptions {
     widgets: AgStudioProperties<PcwRegistry>['widgets'];
     /** Merged over the demo's own Studio properties, last. For host-side experiments only. */
     studioOverrides?: Partial<AgStudioProperties>;
+    /** Lay the demo out for a phone: view mode, no side panels and widgets in a single column. */
+    phoneLayout?: boolean;
 }
+
+// Studio's default page minimum width of 720 would leave the single-column breakpoint unreachable.
+const PHONE_PAGE_MIN_WIDTH = 250;
+const PHONE_MAX_WIDTH = 719;
 
 /**
  * The demo's Studio properties: the curated catalogue, its dataset and its opening dashboard.
@@ -104,8 +110,9 @@ export interface WidgetLibraryStudioOptions {
 export function widgetLibraryProperties({
     widgets,
     studioOverrides,
+    phoneLayout,
 }: WidgetLibraryStudioOptions): AgStudioProperties<PcwRegistry> {
-    return {
+    const properties: AgStudioProperties<PcwRegistry> = {
         ...studioOverrides,
         data: getPreconfiguredWidgetsData(),
         mode: 'edit',
@@ -120,6 +127,18 @@ export function widgetLibraryProperties({
         },
         widgets,
     };
+    if (!phoneLayout) return properties;
+
+    const phoneProperties: Partial<AgStudioProperties<PcwRegistry>> = {
+        mode: 'view',
+        theme: grafanaTheme.withParams({ studioMinHeight: 0 }),
+        layout: { ...properties.layout, minWidth: PHONE_PAGE_MIN_WIDTH },
+        responsiveLayoutBreakpoints: [
+            { minWidth: PHONE_PAGE_MIN_WIDTH, maxWidth: PHONE_MAX_WIDTH, layout: singleColumnLayout },
+        ],
+        panels: { view: { left: [], right: [] } },
+    };
+    return { ...properties, ...phoneProperties };
 }
 
 /** Mount Studio on `canvas` directly. For the plain-TypeScript variant, which has no wrapper. */

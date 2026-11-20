@@ -14,6 +14,11 @@ import {
 export interface ServiceHealthAppProps {
     /** Merged over the demo's own Studio properties, last. For host-side experiments only. */
     studioOverrides?: Partial<AgStudioProperties<ServiceHealthRegistry>>;
+    /**
+     * Lay the dashboard out for a phone: view mode, no side panels and widgets in a single column.
+     * Read once on mount, so re-mount the app to change it.
+     */
+    phoneLayout?: boolean;
 }
 
 const widgets = createWidgets(serviceHealthWidgets);
@@ -26,7 +31,7 @@ const widgets = createWidgets(serviceHealthWidgets);
  * this one contributes is the toolbar that pauses and resumes the feed and sets how often it
  * updates.
  */
-export function ServiceHealthApp({ studioOverrides }: ServiceHealthAppProps) {
+export function ServiceHealthApp({ studioOverrides, phoneLayout }: ServiceHealthAppProps) {
     const [isRunning, setIsRunning] = useState(false);
     const [updateInterval, setUpdateInterval] = useState<UpdateInterval>(UPDATE_INTERVALS[0]);
 
@@ -45,7 +50,7 @@ export function ServiceHealthApp({ studioOverrides }: ServiceHealthAppProps) {
         demo.current = {
             feed,
             studioProperties: {
-                ...serviceHealthProperties({ simulation, studioOverrides }),
+                ...serviceHealthProperties({ simulation, studioOverrides, phoneLayout }),
                 widgets,
                 onStudioReady: (event) => feed.connect(event.api.getDataEngine()),
             },

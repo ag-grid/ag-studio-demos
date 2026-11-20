@@ -11,7 +11,7 @@ import type {
     AgStudioProperties,
     AgWidgetsConfig,
 } from 'ag-studio';
-import { createDataEngine, studioTheme } from 'ag-studio';
+import { createDataEngine, singleColumnLayout, studioTheme } from 'ag-studio';
 
 import type { PeerGroup } from './data';
 import { getPeerGroupData } from './data';
@@ -75,6 +75,8 @@ const reportTheme = studioTheme.withParams({
     chartPaletteStrokes6Color: '#6e5a3a',
 });
 
+const phoneReportTheme = reportTheme.withParams({ studioCanvasMinWidth: 0 });
+
 // No canvas minimums or wrapper spacing of Studio's own, so each widget fills exactly the box the
 // host page gives it.
 const embeddedTheme = reportTheme.withParams({
@@ -97,9 +99,13 @@ export function createPeerGroupDataEngine(group: PeerGroup): AgDataEngine {
     return createDataEngine(getPeerGroupData(group));
 }
 
+const PHONE_BREAKPOINTS = [{ minWidth: 0, maxWidth: 719, layout: singleColumnLayout }];
+
 export interface DemoStudioOptions {
     /** Merged over the demo's own Studio properties. For host-side experiments only. */
     studioOverrides?: Partial<AgStudioProperties>;
+    /** Lay each Studio out for a phone-sized page, a single column below 720px. Off by default. */
+    phoneLayout?: boolean;
 }
 
 /**
@@ -132,7 +138,7 @@ export function viewportProperties(
     dataEngine: AgDataEngine,
     popupParent: HTMLElement,
     onDrillThrough: DrillThroughHandler,
-    { studioOverrides }: DemoStudioOptions = {}
+    { studioOverrides, phoneLayout }: DemoStudioOptions = {}
 ): AgStudioProperties {
     return {
         mode: 'view',
@@ -150,6 +156,7 @@ export function viewportProperties(
         widgets: withoutImageDownload,
         popupParent,
         getContextMenuItems: (params) => getDrillThroughMenuItems(params, onDrillThrough),
+        ...(phoneLayout ? { responsiveLayoutBreakpoints: PHONE_BREAKPOINTS } : {}),
         ...studioOverrides,
         data: dataEngine,
         initialState: VIEWPORT_STATES[key],
@@ -163,7 +170,7 @@ export function viewportProperties(
 export function companyReportProperties(
     dataEngine: AgDataEngine,
     filter: AgConditionDefinition,
-    { studioOverrides }: DemoStudioOptions = {}
+    { studioOverrides, phoneLayout }: DemoStudioOptions = {}
 ): Omit<AgStudioProperties<PeerGroupRegistry>, 'widgets'> {
     return {
         mode: 'view',
@@ -171,7 +178,8 @@ export function companyReportProperties(
             edit: { right: ['filters', 'edit', 'data'] },
             view: { right: [] },
         },
-        theme: reportTheme,
+        theme: phoneLayout ? phoneReportTheme : reportTheme,
+        ...(phoneLayout ? { responsiveLayoutBreakpoints: PHONE_BREAKPOINTS } : {}),
         ...studioOverrides,
         data: dataEngine,
         initialState: companyReportState,

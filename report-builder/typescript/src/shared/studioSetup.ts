@@ -1,5 +1,5 @@
 import type { AgPanelsState, AgStudioApi, AgStudioProperties, AgStudioThemeParams } from 'ag-studio';
-import { createStudio, enableStudioDevValidations, studioTheme } from 'ag-studio';
+import { createStudio, enableStudioDevValidations, singleColumnLayout, studioTheme } from 'ag-studio';
 import seedrandom from 'seedrandom';
 
 import { getMainDemoDataGenerated, mainDemoCalendar, mainDemoReports } from './data/mainDemoData';
@@ -120,8 +120,28 @@ export interface ReportBuilderStudioOptions {
     devValidations?: boolean;
     /** AI configuration handed straight to Studio. Omit to run with no AI panel backing. */
     ai?: AgStudioProperties['ai'];
+    /** Lay the demo out for a phone: view mode only, no side panels and one column of widgets. */
+    phoneLayout?: boolean;
     /** Merged over the demo's own Studio properties, last. For host-side experiments only. */
     studioOverrides?: Partial<AgStudioProperties>;
+}
+
+/** Narrowest canvas the phone layout supports, below Studio's default page minimum of 720px. */
+const PHONE_MIN_WIDTH = 250;
+
+/**
+ * Studio properties for a phone: editing needs more room than a phone has, so it stays in view mode
+ * with its panels gone, and the dashboard reflows into a single column instead of being cut off.
+ */
+function phoneProperties(): Partial<AgStudioProperties> {
+    return {
+        mode: 'view',
+        // Lets the canvas be as short as the card the host gives it.
+        theme: acmeTheme.withParams({ studioMinHeight: 0 }),
+        layout: { widgetBorderEnabled: true, minWidth: PHONE_MIN_WIDTH },
+        responsiveLayoutBreakpoints: [{ minWidth: PHONE_MIN_WIDTH, maxWidth: 719, layout: singleColumnLayout }],
+        panels: { view: { left: [], right: [] } },
+    };
 }
 
 /**
@@ -134,7 +154,7 @@ export interface ReportBuilderStudioOptions {
  * `createReportBuilderStudio` below.
  */
 export function reportBuilderProperties(options: ReportBuilderStudioOptions = {}): AgStudioProperties {
-    const { initialReportId, devValidations, ai, studioOverrides } = options;
+    const { initialReportId, devValidations, ai, phoneLayout, studioOverrides } = options;
 
     // Must precede the first Studio instance; a no-op on every mount after the first.
     if (devValidations) {
@@ -164,6 +184,7 @@ export function reportBuilderProperties(options: ReportBuilderStudioOptions = {}
                 right: ['filters'],
             },
         },
+        ...(phoneLayout ? phoneProperties() : {}),
         ...studioOverrides,
     };
 }
